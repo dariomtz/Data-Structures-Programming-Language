@@ -15,6 +15,7 @@ typedef struct strList * List;
 typedef struct strNode * Iterator;
 
 List list_create(Data name);
+char * list_name(List list);
 void list_destroy(List list);
 int list_size(List list);
 void list_add(List list, Data);

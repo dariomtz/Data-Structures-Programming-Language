@@ -12,6 +12,7 @@
 typedef struct strSet * Set;
 
 Set set_create(Data name);
+char * set_name(Set set);
 void set_destroy(Set set);
 int set_size(Set set);
 bool set_add(Set set, Data data);
