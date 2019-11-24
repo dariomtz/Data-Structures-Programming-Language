@@ -11,10 +11,15 @@
 
 #include <stdio.h>
 #include "Lexer.h"
+#include "Map.h"
+#include "Block.h"
 
 typedef struct strParser * Parser;
 
 Parser parser_create(Lexer lexer);
-Data parser_getFunction(Lexer lexer, Data name);
+void parser_destroy(Parser parser);
+Block parser_getMain(Parser parser);
+Block parser_getFunction(Parser parser, Data name);
+error parser_getErrorStatus(Parser parser);
 
 #endif /* Parser_h */

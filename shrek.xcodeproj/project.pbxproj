@@ -18,6 +18,8 @@
 		48FBD0CE23886C2500A542FF /* Queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FBD0CD23886C2500A542FF /* Queue.c */; };
 		48FBD0D22388AF5B00A542FF /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FBD0D12388AF5B00A542FF /* test.c */; };
 		48FBD0D52388AFDD00A542FF /* Runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FBD0D42388AFDD00A542FF /* Runtime.c */; };
+		48FBD0D8238B1AFA00A542FF /* Block.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FBD0D7238B1AFA00A542FF /* Block.c */; };
+		48FBD0DB238B1B9D00A542FF /* Sentence.c in Sources */ = {isa = PBXBuildFile; fileRef = 48FBD0DA238B1B9D00A542FF /* Sentence.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +57,10 @@
 		48FBD0D12388AF5B00A542FF /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		48FBD0D32388AFDD00A542FF /* Runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Runtime.h; sourceTree = "<group>"; };
 		48FBD0D42388AFDD00A542FF /* Runtime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Runtime.c; sourceTree = "<group>"; };
+		48FBD0D6238B1AFA00A542FF /* Block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Block.h; sourceTree = "<group>"; };
+		48FBD0D7238B1AFA00A542FF /* Block.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Block.c; sourceTree = "<group>"; };
+		48FBD0D9238B1B9D00A542FF /* Sentence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sentence.h; sourceTree = "<group>"; };
+		48FBD0DA238B1B9D00A542FF /* Sentence.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Sentence.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +122,10 @@
 				48FBD0CA23886C1100A542FF /* Stack.c */,
 				48FBD0CC23886C2500A542FF /* Queue.h */,
 				48FBD0CD23886C2500A542FF /* Queue.c */,
+				48FBD0D6238B1AFA00A542FF /* Block.h */,
+				48FBD0D7238B1AFA00A542FF /* Block.c */,
+				48FBD0D9238B1B9D00A542FF /* Sentence.h */,
+				48FBD0DA238B1B9D00A542FF /* Sentence.c */,
 			);
 			path = TDAs;
 			sourceTree = "<group>";
@@ -179,8 +189,10 @@
 				48FBD0CE23886C2500A542FF /* Queue.c in Sources */,
 				48FBD0C523886BEE00A542FF /* Map.c in Sources */,
 				48FBD0D52388AFDD00A542FF /* Runtime.c in Sources */,
+				48FBD0D8238B1AFA00A542FF /* Block.c in Sources */,
 				48FBD0C823886BFA00A542FF /* Set.c in Sources */,
 				48FBD0B823884DC100A542FF /* Lexer.c in Sources */,
+				48FBD0DB238B1B9D00A542FF /* Sentence.c in Sources */,
 				48FBD0C22388625000A542FF /* stdhead.c in Sources */,
 				48FBD0D22388AF5B00A542FF /* test.c in Sources */,
 				48FBD0B023884D6100A542FF /* main.c in Sources */,

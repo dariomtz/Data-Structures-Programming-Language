@@ -12,6 +12,7 @@
 typedef struct strStack * Stack;
 
 Stack stack_create(Data name);
+void stack_print(Stack stack);
 char * stack_name(Stack stack);
 void stack_destroy(Stack stack);
 bool stack_isEmpty(Stack stack);

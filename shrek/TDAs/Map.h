@@ -2,8 +2,6 @@
 //  Map.h
 //  shrek
 //
-//  Created by Darío Martínez on 11/22/19.
-//  Copyright © 2019 Darío Martínez. All rights reserved.
 //
 
 #ifndef Map_h
@@ -14,6 +12,7 @@
 typedef struct strMap * Map;
 
 Map map_create(Data name, int cap);
+void map_print(Map map);
 char * map_name(Map map);
 void map_destroy(Map map);
 int  map_size(Map map);
