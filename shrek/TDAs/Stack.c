@@ -28,15 +28,72 @@ Stack stack_create(Data name){
 	return newStack;
 }
 
-void stack_print(Stack stack);
+void stack_print(Stack stack){
+	Node auxNode = stack->top;
+	tokenType type;
+	while(auxNode){
+		type = auxNode->data->type;
+		if(type == INT || type == FLOAT || type == STRING){
+			print(auxNode->data);
+		}
+		else if(type == STACK){
+			stack_print(auxNode->data->value);
+		}
+		else if(type == LIST){
+			list_print(auxNode->data->value);
+		}
+		else if(type == QUEUE){
+			queue_print(auxNode->data->value);
+		}
+		else if(type == SET){
+			set_print(auxNode->data->value);
+		}
+		else if(type == MAP){
+			set_print(auxNode->data->value);
+		}
+		else if(type == FUNCTION){
+			block_print(auxNode->data->value);
+		}
+		auxNode = auxNode->prior;
+	}
+	return;
+}
 
-char * stack_name(Stack stack){
+Data stack_name(Stack stack){
 	return stack ? stack->name : NULL;
 }
 
-void stack_destroy(Stack stack);
+void stack_destroy(Stack stack){
+	tokenType type;
+	while(!stack_isEmpty(stack)){
+		type = stack->top->data->type;
+		if(type == INT || type == FLOAT || type == STRING){
+			free(pop(stack));
+		}
+		else if(type == STACK){
+			stack_destroy(pop(stack));
+		}
+		else if(type == LIST){
+			list_destroy(pop(stack));
+		}
+		else if(type == QUEUE){
+			queue_destroy(pop(stack));
+		}
+		else if(type == SET){
+			set_destroy(pop(stack));
+		}
+		else if(type == MAP){
+			map_destroy(pop(stack));
+		}
+		else if(type == FUNCTION){
+			block_destroy(pop(stack));
+		}
+	}
+	return;
+}
+
 bool stack_isEmpty(Stack stack){
-	return stack->size != 0 ? true : false ;
+	return stack->size != 0 ? true : false;
 }
 
 int size(Stack stack){
@@ -46,7 +103,7 @@ Data stack_top(Stack stack){
 	return stack ? stack->top->data : NULL;
 }
 
-Data pop(Stack stack){
+Data stack_pop(Stack stack){
 	if(!stack || !stack->name){
 		return NULL;
 	}
@@ -56,7 +113,7 @@ Data pop(Stack stack){
 	free(auxNode);
 	return auxData;
 }
-void push(Stack stack,Data data){
+void stack_push(Stack stack,Data data){
 	if(!stack){
 		return;
 	}
