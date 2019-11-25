@@ -65,10 +65,14 @@ Data stack_name(Stack stack){
 
 void stack_destroy(Stack stack){
 	tokenType type;
+	Data auxData;
 	while(!stack_isEmpty(stack)){
 		type = stack->top->data->type;
 		if(type == INT || type == FLOAT || type == STRING){
-			free(pop(stack));
+			auxData = pop(stack);
+			free(auxData->type);
+			free(auxData->value);
+			free(auxData);
 		}
 		else if(type == STACK){
 			stack_destroy(pop(stack));
@@ -89,11 +93,13 @@ void stack_destroy(Stack stack){
 			block_destroy(pop(stack));
 		}
 	}
+	free(stack->name);
+	free(stack);
 	return;
 }
 
 bool stack_isEmpty(Stack stack){
-	return stack->size != 0 ? true : false;
+	return stack && stack->size != 0 ? true : false;
 }
 
 int size(Stack stack){
