@@ -20,4 +20,5 @@ Sentence sentence_getLeftSubsentece(Sentence sentence);
 Sentence sentence_getRightSubsentece(Sentence sentence);
 error sentence_getErrorStatus(Sentence sentence);
 
+
 #endif /* Sentence_h */
