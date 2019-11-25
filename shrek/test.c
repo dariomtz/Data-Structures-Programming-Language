@@ -34,10 +34,13 @@ void test_queue(){
 }
 
 void test_lexer(){
+    
+    
     printf("\n Lexer passed all the tests :)");
 }
 
 void test_parser(){
+    
     printf("\n Parser passed all the tests :)");
 }
 
