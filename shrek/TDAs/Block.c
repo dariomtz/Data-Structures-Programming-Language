@@ -8,11 +8,13 @@
 
 struct strBlock {
     Sentence * sentences;
+    List params;
     int size, cap;
     error error;
+    Data name;
 };
 
-Block block_create(Lexer lexer, int a, int b){
+Block block_create(Lexer lexer, int leftBrace, int rightBrace, Data name){
     Block newBlock = (Block) calloc(1, sizeof(struct strBlock));
     
     newBlock -> cap = 10;
@@ -20,13 +22,18 @@ Block block_create(Lexer lexer, int a, int b){
     newBlock -> error.type = NO_ERROR;
     newBlock -> error.message = (char *) malloc(100);
     
-    int i = a+1, j= i + 1, openedBraces = 0; //first token is  { or BEGIN_MAIN so skip it;
+    int i = leftBrace, j, openedBraces = 0;
+    
+    //get to the first token that is not a end of line, ather the initial '{'
+    while (i++,lexer_getToken(lexer, i) -> type == END_LINE){}
+    j = i + 1;
+    
     tokenType begining, current, next;
     
     while (true) {
         
         if (newBlock -> size == newBlock -> cap) {
-            newBlock -> cap = newBlock -> cap *2;
+            newBlock -> cap *= 2;
             newBlock -> sentences = (Sentence *) realloc(newBlock -> sentences, newBlock -> cap);
         }
         
@@ -40,7 +47,10 @@ Block block_create(Lexer lexer, int a, int b){
             openedBraces--;
         }
         
-        if (((begining == IF && next != ELSE) || begining == WHILE || begining == FOR) && current == RBRACE && openedBraces == 0) {
+        if ((((begining == IF && next != ELSE) || begining == WHILE || begining == FOR) //if it is an if, for or while
+            && current == RBRACE && openedBraces == 0)// and its braces have been closed
+            //of if it is not and this token is an end of line
+            || (current == END_LINE && begining != IF && begining != WHILE && begining != FOR)) {
             
             Sentence newSentence = sentence_create(lexer, i, j);
             newBlock -> sentences[newBlock -> size] = newSentence;
@@ -53,45 +63,14 @@ Block block_create(Lexer lexer, int a, int b){
             
             newBlock -> size++;
             
-            i = j + 1;
-            j = i;
+            i = j;
+            while (i++,lexer_getToken(lexer, i) -> type == END_LINE){}
             
-        }else if (current == END_LINE && begining != IF && begining != WHILE && begining != FOR) {
-            
-            Sentence newSentence = sentence_create(lexer, i, j + 1);
-            newBlock -> sentences[newBlock -> size] = newSentence;
-            error nsError = sentence_getErrorStatus(newSentence);
-            if (nsError.type != NO_ERROR) {
-                newBlock -> error.type = nsError.type;
-                newBlock -> error.message = nsError.message;
-                return newBlock;
-            }
-
-            newBlock -> size++;
-            
-            i = j + 1;
             j = i;
         }
-        
         j++;
         
-        if (i == b) {
-            if (j != i+1) {
-                if(begining == IF){
-                    newBlock -> error.type = NO_RBRACE_FOR_IF;
-                    strcpy(newBlock -> error.message, "Missing '}' for IF statement\n");
-                }else if (begining == WHILE){
-                    newBlock -> error.type = NO_RBRACE_FOR_WHILE;
-                    strcpy(newBlock -> error.message, "Missing '}' for WHILE loop\n");
-                }else if (begining == FOR){
-                    newBlock -> error.type = NO_RBRACE_FOR_FOR;
-                    strcpy(newBlock -> error.message, "Missing '}' for FOR loop\n");
-                }else{
-                    newBlock -> error.type = NO_END_LINE_FOR_SENTENCE;
-                    strcpy(newBlock -> error.message, "Missing '\n' for  statement\n");
-                }
-            }
-            
+        if (i >= rightBrace) {
             return newBlock;
         }
     }
@@ -104,6 +83,12 @@ void block_destroy(Block block){
     
     for (int i = 0; i < block -> size; i++) {
         sentence_destroy(block -> sentences[i]);
+    }
+    
+    free(block -> sentences);
+    
+    if (block -> params) {
+        list_destroy(block -> params);
     }
     
     free(block -> error.message);
@@ -120,9 +105,28 @@ error block_getErrorStatus(Block block){
 }
 
 Sentence block_getSentence(Block block, int pos){
-    bool validPos = block && 0 <= pos && pos <= block -> size;
+    bool validPos = block && 0 <= pos && pos < block -> size;
     return validPos ? (block -> sentences[pos]) : NULL;
 }
 
+void block_print(Block block){
+    if (!block || !block -> name) {
+        return;
+    }
+    data_print(block -> name);
+    printf("()");
+}
+
+List block_getParams(Block block){
+    return block ? block -> params : NULL;
+}
+
+void block_setParams(Block block, List params){
+    if (!block) {
+        return;
+    }
+    
+    block -> params = params;
+}
 
 

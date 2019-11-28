@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MEMORY_CAPACITY 100
+
 typedef enum {ERROR = -1,
     FALSE, TRUE, NAME, INT, FLOAT, STRING, END_LINE, LPAREN, RPAREN, LBRACE, RBRACE,//first in priority
     USE_METHOD,
@@ -26,7 +28,7 @@ typedef enum {ERROR = -1,
     BINARY_OR,
     LOGIC_AND,
     LOGIC_OR,
-    TERNARY,
+    TERNARY_QM, TERNARY_DOTS,
     ASIGN, SUM_ASIGN, SUBSTRACT_ASIGN, MULTIPLICATION_ASIGN, DIVISION_ASIGN, MODULO_ASIGN,
     COMA, SEMICOLON,
     IF, ELSE, WHILE, FOR, BREAK, CONTINUE, BEGIN_MAIN, END_MAIN, FUNCTION,
@@ -36,10 +38,11 @@ typedef enum {ERROR = -1,
 typedef enum {
     NO_ERROR,
     //lexer errors
-    UNREGONIZED_TOKEN, EMPTY_FILE,
+    UNREGONIZED_TOKEN, EMPTY_FILE, FILE_DOESNT_EXIST,
     
     //Parser errors, from 100 to 200
-    NO_NAME_AFTER_FUNC = 100, NO_LBRACE_AFTER_FUNC_NAME, NO_RBRACE_FOR_FUNC, NO_RBRACE_FOR_IF, NO_RBRACE_FOR_WHILE, NO_RBRACE_FOR_FOR, NO_END_LINE_FOR_SENTENCE, BLOCK_DOESNT_EXIST, PARSER_DOESNT_EXIST,
+    NO_NAME_AFTER_FUNC = 100, NO_LPAREN_FOR_PARAMS, NO_RPAREN_FOR_PARAMS, NO_LBRACE_FOR_FUNC, NO_RBRACE_FOR_FUNC,
+    NO_RBRACE_FOR_IF, NO_RBRACE_FOR_WHILE, NO_RBRACE_FOR_FOR, NO_END_LINE_FOR_SENTENCE, BLOCK_DOESNT_EXIST, PARSER_DOESNT_EXIST, TOKEN_OUTSIDE_MAIN, REPEATED_NAME_FOR_FUNCTION, INVALID_PARAMS,
 }errorType;
 
 typedef enum {false, true} bool;
@@ -54,18 +57,15 @@ typedef struct {
 struct strData {
     tokenType type;
     Type value;
-};
-
-typedef struct strNode * Node;
-
-struct strNode{
-    Data value;
-    Node leftChild, rightChild;
+    bool dest;
 };
 
 Data data_create(tokenType type, Type value);
-int cmp(Data a, Data b);
-void print(Data data);
-void destroy(Data data);
+Data data_makeCopy(Data data);
+Data data_copyResolvedData(Data data);
+Data data_makeReference(Data data);
+int data_cmp(Data a, Data b);
+void data_print(Data data);
+void data_destroy(Data data);
 
 #endif /* stdhead_h */
