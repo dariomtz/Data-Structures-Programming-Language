@@ -7,7 +7,6 @@
 */
 
 #include "lexer.h"
-#include <string.h>
 
 #define caracter(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')|| (c>= '0' && c <= '9') || (c == '_'))
 
@@ -112,7 +111,9 @@ tokenType searchType(char* word, int size){
 		if (word[0] == '}')
 			return RBRACE;
 		if (word[0] == '?')
-					return TERNARY;
+            return TERNARY_QM;
+        if (word[0] == ':')
+            return TERNARY_DOTS;
 		break;
 	case 2:
 		if (!(strcmp(word, "if")))
@@ -177,14 +178,10 @@ tokenType searchType(char* word, int size){
 	case 8:
 		if (!(strcmp(word, "continue")))
 			return CONTINUE;
-		if (!(strcmp(word, "END_MAIN")))
-			return END_MAIN;
+		
 		if (!(strcmp(word, "FUNCTION")))
 			return FUNCTION;
 		break;
-	case 10:
-		if (!(strcmp(word, "BEGIN_MAIN")))
-			return BEGIN_MAIN;
 	}
 
 	//If it is here, means that it can be a number o a name
