@@ -160,7 +160,6 @@ Sentence sentence_create(Lexer lexer, int a, int b){
     
     //si el de mayor prioridad es un nombre, entonces hay que revisar para ejecutar una función o método.
     
-    
 }
 
 void sentence_destroy(Sentence sentence);
