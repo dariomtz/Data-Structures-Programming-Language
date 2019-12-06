@@ -66,41 +66,6 @@ Data queue_name(Queue queue){
 	return queue ? queue->name : NULL;
 }
 
-void queue_destroy(Queue queue){
-	tokenType type;
-	Data auxData;
-	while(!queue_isEmpty(queue)){
-		type = queue->first->data->type;
-		if(type == INT || type == FLOAT || type == STRING){
-			auxData = queue_poll(queue);
-			free(auxData->type);
-			free(auxData->value);
-			free(auxData);
-		}
-		else if(type == STACK){
-			stack_destroy(queue_poll(queue));
-		}
-		else if(type == LIST){
-			list_destroy(queue_poll(queue));
-		}
-		else if(type == QUEUE){
-			queue_destroy(queue_poll(queue));
-		}
-		else if(type == SET){
-			set_destroy(queue_poll(queue));
-		}
-		else if(type == MAP){
-			map_destroy(queue_poll(queue));
-		}
-		else if(type == FUNCTION){
-			block_destroy(queue_poll(queue));
-		}
-	}
-	free(queue->name);
-	free(queue);
-	return;
-
-}
 
 int queue_size(Queue queue){
 	return queue ? queue->size : NULL;
@@ -145,5 +110,14 @@ Data queue_poll(Queue queue){
 	}
 	free(auxNode);
 	return auxData;
+}
+void queue_destroy(Queue queue){
+	while(!queue_isEmpty(queue)){
+		data_destroy(queue_poll(queue));
+	}
+	data_destroy(queue->name);
+	free(queue);
+	return;
+
 }
 
