@@ -34,28 +34,7 @@ void queue_print(Queue queue){
 	Node auxNode = queue->first;
 	tokenType type;
 	while(auxNode){
-		type = auxNode->data->type;
-		if(type == INT || type == FLOAT || type == STRING){
-			print(auxNode->data);
-		}
-		else if(type == STACK){
-			stack_print(auxNode->data->value);
-		}
-		else if(type == LIST){
-			list_print(auxNode->data->value);
-		}
-		else if(type == QUEUE){
-			queue_print(auxNode->data->value);
-		}
-		else if(type == SET){
-			set_print(auxNode->data->value);
-		}
-		else if(type == MAP){
-			set_print(auxNode->data->value);
-		}
-		else if(type == FUNCTION){
-			block_print(auxNode->data->value);
-		}
+		data_print(auxNode->data):
 		auxNode = auxNode->next;
 	}
 	return;
