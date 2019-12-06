@@ -81,12 +81,12 @@ void list_add(List l, Data k, Data v) {
 	l->size++;
 }
 ;
-Type list_remove(List l, Data k) {
+Data list_remove(List l, Data k) {
 	if (!l || !k)
 		return NULL;
 	Node n = l->first;
 	Node pn = NULL;
-	Type value;
+	Data value;
 	while (n) {
 		if (!data_cmp(k, n->key)) {
 			value = n->value;
@@ -172,17 +172,18 @@ Data map_get(Map map, Data key){
 	}
 	return NULL;
 };
-Data map_remove(Map map, Data key){
+void map_remove(Map map, Data key){
 	if (!map || !key)
-		return NULL;
+		return;
 	int i = hash(key, map->cap);
 	List l = map->table[i];
 	if (!l)
-		return NULL;
-	Type value = list_remove(l, key);
+		return;
+	Data value = list_remove(l, key);
 	if (value)
 		map->size--;
-	return value;
+	data_destroy(value);
+	return;
 };
 void map_print(Map map){
 	if (!map)
@@ -208,10 +209,4 @@ void map_print(Map map){
 	}
 	printf("]");
 };
-
-
-
-
-
-
 
