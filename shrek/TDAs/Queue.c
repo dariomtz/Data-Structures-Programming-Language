@@ -33,10 +33,14 @@ Queue queue_create(Data name){
 void queue_print(Queue queue){
 	Node auxNode = queue->first;
 	tokenType type;
+	printf("[");
 	while(auxNode){
 		data_print(auxNode->data):
+		if(printf->next)
+			printf(", ");
 		auxNode = auxNode->next;
 	}
+	printf("]");
 	return;
 }
 
