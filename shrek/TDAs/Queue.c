@@ -33,31 +33,14 @@ Queue queue_create(Data name){
 void queue_print(Queue queue){
 	Node auxNode = queue->first;
 	tokenType type;
+	printf("[");
 	while(auxNode){
-		type = auxNode->data->type;
-		if(type == INT || type == FLOAT || type == STRING){
-			print(auxNode->data);
-		}
-		else if(type == STACK){
-			stack_print(auxNode->data->value);
-		}
-		else if(type == LIST){
-			list_print(auxNode->data->value);
-		}
-		else if(type == QUEUE){
-			queue_print(auxNode->data->value);
-		}
-		else if(type == SET){
-			set_print(auxNode->data->value);
-		}
-		else if(type == MAP){
-			set_print(auxNode->data->value);
-		}
-		else if(type == FUNCTION){
-			block_print(auxNode->data->value);
-		}
+		data_print(auxNode->data):
+		if(printf->next)
+			printf(", ");
 		auxNode = auxNode->next;
 	}
+	printf("]");
 	return;
 }
 
@@ -66,41 +49,6 @@ Data queue_name(Queue queue){
 	return queue ? queue->name : NULL;
 }
 
-void queue_destroy(Queue queue){
-	tokenType type;
-	Data auxData;
-	while(!queue_isEmpty(queue)){
-		type = queue->first->data->type;
-		if(type == INT || type == FLOAT || type == STRING){
-			auxData = queue_poll(queue);
-			free(auxData->type);
-			free(auxData->value);
-			free(auxData);
-		}
-		else if(type == STACK){
-			stack_destroy(queue_poll(queue));
-		}
-		else if(type == LIST){
-			list_destroy(queue_poll(queue));
-		}
-		else if(type == QUEUE){
-			queue_destroy(queue_poll(queue));
-		}
-		else if(type == SET){
-			set_destroy(queue_poll(queue));
-		}
-		else if(type == MAP){
-			map_destroy(queue_poll(queue));
-		}
-		else if(type == FUNCTION){
-			block_destroy(queue_poll(queue));
-		}
-	}
-	free(queue->name);
-	free(queue);
-	return;
-
-}
 
 int queue_size(Queue queue){
 	return queue ? queue->size : NULL;
@@ -145,5 +93,14 @@ Data queue_poll(Queue queue){
 	}
 	free(auxNode);
 	return auxData;
+}
+void queue_destroy(Queue queue){
+	while(!queue_isEmpty(queue)){
+		data_destroy(queue_poll(queue));
+	}
+	data_destroy(queue->name);
+	free(queue);
+	return;
+
 }
 
