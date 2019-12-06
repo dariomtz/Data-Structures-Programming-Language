@@ -73,6 +73,7 @@ void removeBranch(Set s, node p, bool isLeftChild, int a){
 			s->sets[a] = NULL;
 		else // caso 1
 			addLink(p,NULL,isLeftChild);
+		data_destroy(n->data);
 		free((void*)n);
 		s->size--;
 		return;
@@ -90,6 +91,7 @@ void removeBranch(Set s, node p, bool isLeftChild, int a){
 			else // caso 2b
 				addLink(p, n->right, isLeftChild);
 		}
+		data_destroy(n->data);
 		free((void*) n);
 		s->size--;
 		return;
@@ -190,9 +192,9 @@ bool set_contains(Set set, Data data){
 	}
 	return FALSE;
 };
-bool set_remove(Set set, Data data){
+void set_remove(Set set, Data data){
 	if (!set || !data)
-		return FALSE;
+		return;
 	int a =(data->type == INT || data->type == FLOAT)? 0:(data->type == STRING)?1:2;
 	node n = set->sets[a];
 	node p = NULL;
@@ -214,9 +216,9 @@ bool set_remove(Set set, Data data){
 		}
 	}
 	if (!n)
-		return FALSE;
+		return;
 	removeBranch(set, p, isLeftChild, a);
-	return TRUE;
+	return;
 };
 void set_print(Set set) {
 	if (!set)
