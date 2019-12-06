@@ -31,10 +31,14 @@ Stack stack_create(Data name){
 void stack_print(Stack stack){
 	Node auxNode = stack->top;
 	tokenType type;
+	printf("["):
 	while(auxNode){
 		data_print(auxNode->data);
+		if(auxNode->prior)
+			printf(", ");
 		auxNode = auxNode->prior;
 	}
+	printf("]");
 	return;
 }
 
