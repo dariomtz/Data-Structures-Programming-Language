@@ -95,18 +95,25 @@ int priority(Token t){
 
 Data createArgumentList(Lexer lexer, int leftParen, int rightParen){
     List arguments = list_create(NULL);
-    //must return a list of sentences, which are separated by commas and
     
     int i = leftParen, j = leftParen;
     Token current;
     
     while (true) {
         current = lexer_getToken(lexer, j);
-        
+        if (current ->type == COMA || j == rightParen) {
+            Sentence argument = sentence_create(lexer, i + 1, j-1);
+            error e = sentence_getErrorStatus(argument);
+            if (e.type) {
+                return data_create(ERROR, NULL);
+            }
+            if (j == rightParen) {
+                return data_create(LIST, arguments);
+            }
+            i = j;
+        }
+        j++;
     }
-    
-    
-    return data_create(LIST, arguments);
 }
 
 Sentence sentence_create(Lexer lexer, int a, int b){
