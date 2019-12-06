@@ -93,8 +93,10 @@ int priority(Token t){
     }
 }
 
-List createArgumentList(Lexer lexer, int leftParen, int rightParen){
+Data createArgumentList(Lexer lexer, int leftParen, int rightParen){
     List arguments = list_create(NULL);
+    //must return a list of sentences, which are separated by commas and
+    
     int i = leftParen, j = leftParen;
     Token current;
     
@@ -104,14 +106,18 @@ List createArgumentList(Lexer lexer, int leftParen, int rightParen){
     }
     
     
-    return arguments;
+    return data_create(LIST, arguments);
 }
 
 Sentence sentence_create(Lexer lexer, int a, int b){
-    //reservar memoria para un sentence
     Sentence newSentece = (Sentence) malloc(sizeof(struct strSentence));
+    newSentece -> error.message = (char *) malloc(100);
+
+    //non-recursive cases
+    if (a > b) {
+        return NULL;
+    }
     
-    //manejar el caso base a == b
     if (a == b) {
         newSentece -> value = data_makeCopy(lexer_getToken(lexer, a));
         newSentece -> rightSubsentence = NULL;
@@ -119,15 +125,23 @@ Sentence sentence_create(Lexer lexer, int a, int b){
         return newSentece;
     }
     
-    //manejar el caso en el que hay recursión
+    //Ignore the last character if it is a end of line character
     if (lexer_getToken(lexer, b) -> type == END_LINE) {
+        b--;
+    }
+    
+    //If both of the borders are parenthesis, they should be ignored
+    if (lexer_getToken(lexer, a) -> type == LPAREN && lexer_getToken(lexer, b) -> type == RPAREN) {
+        a++;
         b--;
     }
     
     Token first = lexer_getToken(lexer, a);
     tokenType typeFirst = first -> type;
+    
     if (typeFirst == IF) {
         newSentece -> value = data_makeCopy(first);
+        
         //do all the validations to make an if-else statement and return errors
     }else if (typeFirst == FOR){
         newSentece -> value = data_makeCopy(first);
@@ -136,11 +150,10 @@ Sentence sentence_create(Lexer lexer, int a, int b){
         newSentece -> value = data_makeCopy(first);
         //do all the validations to make an while statement and return errors
     }
-        
     
     int openedParentesis = 0;
     Token leastPriorityData = lexer_getToken(lexer, a), current;
-    int leastPriority = priority(leastPriorityData);
+    int leastPriority = priority(leastPriorityData), parent = a;
     
     for (int i = a; i <= b; i++) {
         current = lexer_getToken(lexer, i);
@@ -152,17 +165,79 @@ Sentence sentence_create(Lexer lexer, int a, int b){
             continue;
         }
         
-        if (priority(current) < priority(leastPriorityData) && !openedParentesis) {
+        if (priority(current) < leastPriority && !openedParentesis) {
             leastPriorityData = current;
             leastPriority = priority(current);
+            parent = i;
         }
     }
     
-    //si el de mayor prioridad es un nombre, entonces hay que revisar para ejecutar una función o método.
+    newSentece -> value = leastPriorityData;
     
+    
+    //create a function sentence
+    if (leastPriorityData -> type == NAME){
+        if (a == parent && lexer_getToken(lexer, parent + 1) -> type == LPAREN && lexer_getToken(lexer, b) -> type == RPAREN) {
+            Sentence argumets = (Sentence) malloc(sizeof(struct strSentence));
+            argumets -> value = createArgumentList(lexer, parent + 1, b);
+            argumets -> rightSubsentence = NULL;
+            argumets -> leftSubsentence = NULL;
+            newSentece -> rightSubsentence = argumets;
+            newSentece -> leftSubsentence = NULL;
+        }else{
+            newSentece -> error.type = INVALID_OPERATION;
+            strcpy(newSentece -> error.message, "Invalid operation.");
+            return newSentece;
+        }
+    }
+    
+    newSentece -> leftSubsentence = sentence_create(lexer, a, parent - 1);
+    
+    if (newSentece -> leftSubsentence) {
+        error leftChildError = sentence_getErrorStatus(newSentece -> leftSubsentence);
+        if (leftChildError.type) {
+            newSentece -> error.type = leftChildError.type;
+            strcpy(newSentece -> error.message, leftChildError.message);
+            return newSentece;
+        }
+    }
+    
+    newSentece -> rightSubsentence = sentence_create(lexer, parent + 1, b);
+    
+    if (newSentece -> rightSubsentence) {
+        error rightChildError = sentence_getErrorStatus(newSentece -> rightSubsentence);
+        if (rightChildError.type) {
+            newSentece -> error.type = rightChildError.type;
+            strcpy(newSentece -> error.message, rightChildError.message);
+            return newSentece;
+        }
+    }
+    
+    return newSentece;
 }
 
-void sentence_destroy(Sentence sentence);
-Sentence sentence_getLeftSubsentece(Sentence sentence);
-Sentence sentence_getRightSubsentece(Sentence sentence);
-error sentence_getErrorStatus(Sentence sentence);
+void sentence_destroy(Sentence sentence){
+    if (!sentence) {
+        return;
+    }
+    
+    data_destroy(sentence -> value);
+    free(sentence -> error.message);
+    
+    sentence_destroy(sentence -> leftSubsentence);
+    sentence_destroy(sentence -> rightSubsentence);
+    free(sentence);
+}
+
+Sentence sentence_getLeftSubsentece(Sentence sentence){
+    return sentence ? sentence -> leftSubsentence : NULL;
+}
+
+Sentence sentence_getRightSubsentece(Sentence sentence){
+    return sentence ? sentence -> rightSubsentence : NULL;
+}
+
+error sentence_getErrorStatus(Sentence sentence){
+    error e = {SENTENCE_DOESNT_EXIST, NULL};
+    return sentence ? sentence -> error : e;
+}

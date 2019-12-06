@@ -6,7 +6,7 @@
     Implementation of Lexer struct and its functions
 */
 
-#include "lexer.h"
+#include "Lexer.h"
 
 #define caracter(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')|| (c>= '0' && c <= '9') || (c == '_'))
 
@@ -17,7 +17,6 @@ struct strLexer{
 	int capacity;
 	Token * list;
 };
-
 
 char * string_modification(char * c, int size){
 	int removes = 0;
