@@ -100,7 +100,7 @@ tokenType searchType(char* word, int size){
 		if(word[0] == '\n')
 			return END_LINE;
 		if (word[0] == ',')
-			return COMA;
+			return COMMA;
 		if (word[0] == ';')
 			return SEMICOLON;
 		if (word[0] == '.')
