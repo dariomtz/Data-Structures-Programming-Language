@@ -4,11 +4,9 @@
 //
 //
 
-#include "List.h"
-#include "Map.h"
-#include "Set.h"
-#include "Stack.h"
 #include "Queue.h"
+
+typedef struct strNode * Node;
 
 struct strNode{
 	Data data;
@@ -32,11 +30,10 @@ Queue queue_create(Data name){
 
 void queue_print(Queue queue){
 	Node auxNode = queue->first;
-	tokenType type;
 	printf("[");
 	while(auxNode){
-		data_print(auxNode->data):
-		if(printf->next)
+        data_print(auxNode->data);
+		if(auxNode->next)
 			printf(", ");
 		auxNode = auxNode->next;
 	}
@@ -51,7 +48,7 @@ Data queue_name(Queue queue){
 
 
 int queue_size(Queue queue){
-	return queue ? queue->size : NULL;
+	return queue ? queue->size : 0;
 }
 
 bool queue_isEmpty(Queue queue){

@@ -14,7 +14,6 @@ struct strNode{
 	Data data;
 };
 
-
 struct strSet{
 	int size;
 	Data name;
@@ -40,18 +39,18 @@ void destroy(node n){
 	data_destroy(n->data);
 	free((void*)n);
 	return;
-};
+}
 
 void addLink(node p, node c, bool isLeftChild) {
 	if (!p)
 		return;
-	if (isLeftChild == TRUE)
+	if (isLeftChild == true)
 		p->left = c;
 	else
 		p->right = c;
 
 	return;
-};
+}
 
 node almostBigger(node n){
 	node p = NULL;
@@ -101,12 +100,12 @@ void removeBranch(Set s, node p, bool isLeftChild, int a){
 	Type t;
 	if (pm) {// caso 3b
 		t = (pm->right)->data;
-		removeBranch(s, pm, FALSE);
+		removeBranch(s, pm, false, a);
 		n->data = t;
 	}
 	else {// caso 3a
 		t = (n->left)->data;
-		removeBranch(s,n,TRUE);
+		removeBranch(s,n,true, a);
 		n->data = t;
 	}
 	return;
@@ -130,20 +129,21 @@ void set_destroy(Set set){
 	free((void*) set);
 	return;
 }
-;
+
 int set_size(Set set){
 	return (!set? -1:set->size);
-};
+}
+
 bool set_add(Set set, Data data){
 	if (!set || !data)
-		return FALSE;
+		return false;
 	node nt = (node) calloc(1, sizeof(struct strNode));
 	nt->data = data;
 	int a =(data->type == INT || data->type == FLOAT)? 0:(data->type == STRING)?1:2;
 	if (!set->sets[a]) {
 		set->sets[a] = nt;
 		set->size++;
-		return TRUE;
+		return true;
 	}
 	node n;
 	int r;
@@ -152,13 +152,13 @@ bool set_add(Set set, Data data){
 		r = data_cmp(data, n->data);
 		if (r == 0) {
 			free((void*) nt);
-			return FALSE;
+			return false;
 		}
 		if (r > 0) {
 			if (n->right == NULL) {
 				n->right = nt;
 				set->size++;
-				return TRUE;
+				return true;
 			} else {
 				n = n->right;
 			}
@@ -166,32 +166,34 @@ bool set_add(Set set, Data data){
 			if (n->left == NULL) {
 				n->left = nt;
 				set->size++;
-				return TRUE;
+				return true;
 			} else {
 				n = n->left;
 			}
 		}
 	}
 	free((void*) nt);
-	return FALSE;
-};
+	return false;
+}
+
 bool set_contains(Set set, Data data){
 	if (!set || !data)
-		return FALSE;
+		return false;
 	int a =(data->type == INT || data->type == FLOAT)? 0:(data->type == STRING)?1:2;
 	node n = set->sets[a];
 	int r;
 	while (n) {
 		r = data_cmp(data, n->data);
 		if (r == 0)
-			return TRUE;
+			return true;
 		if (r > 0)
 			n = n->right;
 		else
 			n = n->left;
 	}
-	return FALSE;
+	return false;
 };
+
 void set_remove(Set set, Data data){
 	if (!set || !data)
 		return;
@@ -208,11 +210,11 @@ void set_remove(Set set, Data data){
 		if (r > 0) {
 			p = n;
 			n = n->right;
-			isLeftChild = FALSE;
+			isLeftChild = false;
 		} else {
 			p = n;
 			n = n->left;
-			isLeftChild = TRUE;
+			isLeftChild = true;
 		}
 	}
 	if (!n)
@@ -220,6 +222,7 @@ void set_remove(Set set, Data data){
 	removeBranch(set, p, isLeftChild, a);
 	return;
 };
+
 void set_print(Set set) {
 	if (!set)
 		return;
@@ -229,7 +232,7 @@ void set_print(Set set) {
 	printf("}");
 	return;
 }
-;
+
 
 
 

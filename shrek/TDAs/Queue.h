@@ -13,7 +13,7 @@ typedef struct strQueue * Queue;
 
 Queue queue_create(Data name);
 void queue_print(Queue queue);
-char * queue_name(Queue queue);
+Data queue_name(Queue queue);
 void queue_destroy(Queue queue);
 int queue_size(Queue queue);
 bool queue_isEmpty(Queue queue);

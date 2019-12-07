@@ -4,11 +4,9 @@
 //
 //
 
-#include "List.h"
-#include "Map.h"
-#include "Set.h"
 #include "Stack.h"
-#include "Queue.h"
+
+typedef struct strNode * Node;
 
 struct strNode{
 	Data data;
@@ -30,8 +28,7 @@ Stack stack_create(Data name){
 
 void stack_print(Stack stack){
 	Node auxNode = stack->top;
-	tokenType type;
-	printf("["):
+    printf("[");
 	while(auxNode){
 		data_print(auxNode->data);
 		if(auxNode->prior)
@@ -46,14 +43,14 @@ Data stack_name(Stack stack){
 	return stack ? stack->name : NULL;
 }
 
-
 bool stack_isEmpty(Stack stack){
 	return stack && stack->size != 0 ? true : false;
 }
 
 int size(Stack stack){
-	return stack ? stack->size : NULL;
+	return stack ? stack->size : 0;
 }
+
 Data stack_top(Stack stack){
 	return stack ? stack->top->data : NULL;
 }
@@ -68,9 +65,11 @@ Data stack_pop(Stack stack){
 	free(auxNode);
 	return auxData;
 }
+
 void stack_destroy(Stack stack){
-	tokenType type;
-	Data auxData;
+    if (!stack) {
+        return;
+    }
 	while(!stack_isEmpty(stack)){
 		data_destroy(stack_pop(stack));
 	}
@@ -78,6 +77,7 @@ void stack_destroy(Stack stack){
 	free(stack);
 	return;
 }
+
 void stack_push(Stack stack,Data data){
 	if(!stack){
 		return;

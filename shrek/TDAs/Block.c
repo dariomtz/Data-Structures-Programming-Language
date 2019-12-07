@@ -25,7 +25,7 @@ Block block_create(Lexer lexer, int leftBrace, int rightBrace, Data name){
     int i = leftBrace, j, openedBraces = 0;
     
     //get to the first token that is not a end of line, ather the initial '{'
-    while (i++,lexer_getToken(lexer, i) -> type == END_LINE){}
+    while ((void)i++,lexer_getToken(lexer, i) -> type == END_LINE){}
     j = i + 1;
     
     tokenType begining, current, next;
@@ -64,7 +64,7 @@ Block block_create(Lexer lexer, int leftBrace, int rightBrace, Data name){
             newBlock -> size++;
             
             i = j;
-            while (i++,lexer_getToken(lexer, i) -> type == END_LINE){}
+            while ((void)i++,lexer_getToken(lexer, i) -> type == END_LINE){}
             
             j = i;
         }

@@ -136,7 +136,7 @@ Parser parser_create(Lexer lexer){
                 return newParser;
             }
             
-            while (current = lexer_getToken(lexer, ++j),current && current -> type == END_LINE) {}
+            while ((void)(current = lexer_getToken(lexer, ++j)),current && current -> type == END_LINE) {}
             
             if (!current || current -> type != LBRACE) {
                 //error, expected opening brace after closing param list

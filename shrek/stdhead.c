@@ -129,7 +129,7 @@ int data_cmp(Data a, Data b){
     return 0;
 }
 
-void print(Data data){
+void printD(Data data){
     if (data -> type == INT) {
         int n = * ((int *) data -> value);
         printf(" %d",n);
@@ -148,7 +148,7 @@ void data_print(Data data){
     }
     
     if (data -> type == INT || data -> type == FLOAT || data -> type == STRING) {
-        print(data->value);
+        printD(data->value);
     }
     
     else if (data -> type == MAP)

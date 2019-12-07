@@ -6,7 +6,6 @@
 
 #include "Map.h"
 
-
 typedef struct strNode * Node;
 struct strNode{
 	Data key;
@@ -14,8 +13,8 @@ struct strNode{
 	Node next;
 };
 
-typedef struct strList * List;
-struct strList{
+typedef struct strListMap * ListMap;
+struct strListMap{
 	int size;
 	Node first;
 	Node last;
@@ -26,7 +25,7 @@ struct strMap{
 	int size;
 	int cap;
 	Data name;
-	List* table;
+	ListMap* table;
 
 };
 
@@ -48,7 +47,7 @@ int hash(Data key,int cap){
     return n;
 }
 
-void list_destroy(List l) {
+void listMap_destroy(ListMap l) {
 	Node n = l->first;
 	Node next;
 	while (n) {
@@ -61,11 +60,11 @@ void list_destroy(List l) {
 	free((void *) l);
 };
 
-List list_create() {
-	return (List) calloc(1, sizeof(struct strList));
+ListMap listMap_create() {
+	return (ListMap) calloc(1, sizeof(struct strListMap));
 };
 
-void list_add(List l, Data k, Data v) {
+void listMap_add(ListMap l, Data k, Data v) {
 	if (!l || !k || !v)
 		return;
 	Node n = (Node) calloc(1, sizeof(struct strNode));
@@ -81,7 +80,7 @@ void list_add(List l, Data k, Data v) {
 	l->size++;
 }
 ;
-Data list_remove(List l, Data k) {
+Data listMap_remove(ListMap l, Data k) {
 	if (!l || !k)
 		return NULL;
 	Node n = l->first;
@@ -115,7 +114,7 @@ Map map_create(Data name, int cap){
 	Map map = (Map) malloc(sizeof(struct strMap));
 	map->cap = cap;
 	map->name = name;
-	map->table = (List*) calloc(cap, sizeof(List));
+	map->table = (ListMap*) calloc(cap, sizeof(ListMap));
 	return map;
 };
 Data map_name(Map map){
@@ -126,7 +125,7 @@ void map_destroy(Map map){
 		return;
 	for (int i = 0; i < map->cap; i++)
 		if (map->table[i])
-			list_destroy(map->table[i]);
+			listMap_destroy(map->table[i]);
 	free((void*) map->table);
 	free((void*) map);
 	return;
@@ -138,10 +137,10 @@ void map_put(Map map, Data key, Data v){
 	if (!map || !key || !v)
 		return;
 	int i = hash(key, map->cap);
-	List l = map->table[i];
+	ListMap l = map->table[i];
 	if (!l) {
-		l = map->table[i] = list_create();
-		list_add(l, key, v);
+		l = map->table[i] = listMap_create();
+		listMap_add(l, key, v);
 		map->size++;
 		return;
 	}
@@ -153,7 +152,7 @@ void map_put(Map map, Data key, Data v){
 		}
 		n = n->next;
 	}
-	list_add(l, key, v);
+	listMap_add(l, key, v);
 	map->size++;
 	return;
 };
@@ -161,7 +160,7 @@ Data map_get(Map map, Data key){
 	if(!map||!key)
 		return NULL;
 	int i = hash(key, map->cap);
-	List l = map->table[i];
+	ListMap l = map->table[i];
 	if (!l)
 		return NULL;
 	Node n = l->first;
@@ -176,10 +175,10 @@ void map_remove(Map map, Data key){
 	if (!map || !key)
 		return;
 	int i = hash(key, map->cap);
-	List l = map->table[i];
+	ListMap l = map->table[i];
 	if (!l)
 		return;
-	Data value = list_remove(l, key);
+	Data value = listMap_remove(l, key);
 	if (value)
 		map->size--;
 	data_destroy(value);
@@ -188,7 +187,7 @@ void map_remove(Map map, Data key){
 void map_print(Map map){
 	if (!map)
 		return;
-	List l;
+	ListMap l;
 	Node n;
 	printf("[");
 	for (int i = 0; i < map->cap; i++) {
