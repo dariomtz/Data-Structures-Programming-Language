@@ -21,7 +21,7 @@ List createParamList(Lexer lexer, int leftParen, int rightParen){
     
     for (int i = leftParen + 1; i < rightParen; i++) {
         current = lexer_getToken(lexer, i);
-        if (coma && current -> type != COMA) {
+        if (coma && current -> type != COMMA) {
             list_destroy(params);
             return NULL;
         }else{

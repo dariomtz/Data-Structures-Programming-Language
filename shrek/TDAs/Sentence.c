@@ -101,7 +101,7 @@ Data createArgumentList(Lexer lexer, int leftParen, int rightParen){
     
     while (true) {
         current = lexer_getToken(lexer, j);
-        if (current ->type == COMA || j == rightParen) {
+        if (current ->type == COMMA || j == rightParen) {
             Sentence argument = sentence_create(lexer, i + 1, j-1);
             error e = sentence_getErrorStatus(argument);
             if (e.type) {
