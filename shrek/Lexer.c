@@ -55,7 +55,7 @@ int evaluate_Action(char Char){
 		return USELESS;
 	if (caracter(Char)||Char == '.')
 		return CARACTER;
-	if (Char == '\n'|| Char == '(' ||  Char == ')' || Char == '{' || Char == '}')
+	if (Char == '\n'|| Char == '(' ||  Char == ')' || Char == '{' || Char == '}' || Char == '?' || Char == ':' || Char == ',' || Char == ';')
 		return UNITARY;
 	return OPERATIONAL;
 
