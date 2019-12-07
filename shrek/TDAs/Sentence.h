@@ -2,8 +2,6 @@
 //  Sentence.h
 //  shrek
 //
-//  Created by Darío Martínez on 11/24/19.
-//  Copyright © 2019 Darío Martínez. All rights reserved.
 //
 
 #ifndef Sentence_h
