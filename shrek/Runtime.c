@@ -575,10 +575,135 @@ Data resolve_sentence(Sentence sentence, Map map){
 			map_put(map,sentence_getValue(right_sentence),right_data);
 			return data_copyResolvedData(right_data);
 		}
+			
+	case MINUS1:
+			
+			break;
+			
+	case NEGATION:
+			
+			break;
+			
+	case MULTIPLICATION:
+			
+			break;
+			
+	case DIVISION:
+			
+			break;
+			
+	case MODULO:
+			
+			break;
+			
+	case SUM:
+			
+			break;
+			
+	case SUBSTRACT:
+			
+			break;
+			
+	case GREATER:
+			
+			break;
+			
+	case GREATER_EQUAL:
+			
+			break;
+			
+	case SMALLER_EQUAL:
+			
+			break;
+			
+	case SMALLER:
+			
+			break;
+			
+	case EQUAL:
+			
+			break;
+			
+	case NOT_EQUAL:
+			
+			break;
+			
+	case BINARY_AND:
+			
+			break;
+			
+	case BINARY_XOR:
+			
+			break;
+			
+	case BINARY_OR:
+			
+			break;
+			
+	case LOGIC_AND:
+			
+			break;
+			
+	case LOGIC_OR:
+			
+			break;
+			
+	case TERNARY_QM:
+			
+			break;
+			
+	case ASIGN:
+			
+			break;
+			
+	case SUM_ASIGN:
+			
+			break;
+			
+	case SUBSTRACT_ASIGN:
+			
+			break;
+			
+	case MULTIPLICATION_ASIGN:
+			
+			break;
+			
+	case DIVISION_ASIGN:
+			
+			break;
+			
+	case MODULO_ASIGN:
+			
+			break;
+			
+	case IF:
+			
+			break;
+			
+	case WHILE:
+			
+			break;
+			
+	case FOR:
+			
+			break;
+			
+	case BREAK:
+			
+			break;
+			
+	case CONTINUE:
+			
+			break;
+			
+	
+	
     default:
         return NULL;
 	}
+	return NULL;
 }
+
 
 void RunTime(Parser parser){
 	error error = parser_getErrorStatus(parser);
