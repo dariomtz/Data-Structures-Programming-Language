@@ -74,6 +74,7 @@ Data input_func(){
 	char* string = (char*)malloc(100);
 	scanf("%[^\n]s",string);
 	char* trueString = (char*)malloc(strlen(string));
+	strcpy(trueString, string);
 	free(string);
 	Data s = data_create(STRING,trueString);
 	return s;
@@ -101,6 +102,7 @@ Data int_cast(Sentence sentence,Map memory){
 	Data dataAux = data_create(INT,i);
 	return dataAux;
 }
+
 Data float_cast(Sentence sentence,Map memory){
 	Data r = resolve_sentence(sentence,memory);
 	if(r->type == FLOAT){
@@ -121,6 +123,7 @@ Data float_cast(Sentence sentence,Map memory){
 	Data dataAux = data_create(FLOAT,i);
 	return dataAux;
 }
+
 int int_len(int i){
 	int count = 0;
 	while(i/=10){
@@ -128,6 +131,7 @@ int int_len(int i){
 	}
 	return count;
 }
+
 int float_len(float i){
 	int count = 0;
 	while((int)i!=i){
@@ -1850,7 +1854,7 @@ Data resolve_sentence(Sentence sentence, Map map){
             }
             
             if(left_data -> type != INT && left_data -> type != FLOAT) {
-                printf("RUNTIME ERROR: Conditional sentece must return a boolean value for WHILW statement.\n");
+                printf("RUNTIME ERROR: Conditional sentece must return a boolean value for WHILE statement.\n");
                 data_destroy(left_data);
                 return data_create(ERROR, NULL);
             }
@@ -1865,10 +1869,14 @@ Data resolve_sentence(Sentence sentence, Map map){
                         data_destroy(left_data);
                         data_destroy(answer);
                         return NULL;
+						
                     }else if(answer -> type == ERROR){
                         data_destroy(left_data);
                         return answer;
-                    }
+						
+					}else{
+						data_destroy(answer);
+					}
                 }
                 data_destroy(left_data);
                 left_data = resolve_sentence(left_sentence, map);
@@ -1878,8 +1886,84 @@ Data resolve_sentence(Sentence sentence, Map map){
             return NULL;
             
     case FOR:
-            
-            break;
+			left_sentence = sentence_getLeftSubsentece(sentence);
+			left_data = sentence_getValue(left_sentence);
+			List forInstructions = left_data -> value;
+			
+			Data initialization = list_get(forInstructions, 0);
+			
+			Data initializationResult = resolve_sentence(initialization -> value, map);
+			
+			if (initializationResult && initializationResult -> type == ERROR) {
+				return initializationResult;
+			}else{
+				data_destroy(initializationResult);
+			}
+			
+			Data condition = list_get(forInstructions, 1);
+			
+			Data conditionResolved = resolve_sentence(condition -> value, map);
+			
+			if (!conditionResolved){
+				printf("RUNTIME ERROR: There must be a conditional sentece for FOR statement.\n");
+				return data_create(ERROR, NULL);
+			}
+			
+			if(conditionResolved -> type != INT && conditionResolved -> type != FLOAT) {
+				printf("RUNTIME ERROR: Conditional sentece must return a boolean value for FOR statement.\n");
+				return data_create(ERROR, NULL);
+			}
+			
+			Data increment = list_get(forInstructions, 2);
+			
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = sentence_getValue(right_sentence);
+			
+			while ((conditionResolved -> type == INT && *(int*)conditionResolved -> value) || (conditionResolved -> type == FLOAT && *(float*)conditionResolved -> value)) {
+				
+				answer = resolve_block(map, right_data -> value);
+				if (answer) {
+					if (answer -> type == BREAK) {
+						if (increment -> type != SENTENCE) {
+							data_destroy(increment);
+						}
+						data_destroy(conditionResolved);
+						data_destroy(answer);
+						return NULL;
+						
+					}else if(answer -> type == ERROR){
+						if (increment -> type != SENTENCE) {
+							data_destroy(increment);
+						}
+						data_destroy(conditionResolved);
+						return answer;
+					}else{
+						data_destroy(answer);
+					}
+				}
+				
+				if (increment -> type != SENTENCE) {
+					data_destroy(increment);
+				}
+				
+				increment = resolve_sentence(increment -> value, map);
+				if (increment) {
+					if (increment -> type == ERROR) {
+						data_destroy(conditionResolved);
+						return increment;
+					}
+				}
+				
+				data_destroy(conditionResolved);
+				conditionResolved = resolve_sentence(condition -> value, map);
+			}
+			
+			data_destroy(conditionResolved);
+			if (increment -> type != SENTENCE) {
+				data_destroy(increment);
+			}
+			
+			return NULL;
             
     case BREAK:
             return data_create(BREAK, NULL);
@@ -1888,9 +1972,7 @@ Data resolve_sentence(Sentence sentence, Map map){
     case CONTINUE:
             return data_create(CONTINUE, NULL);
             break;
-            
-    
-    
+			
     default:
         return NULL;
     }
