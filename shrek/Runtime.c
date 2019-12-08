@@ -669,115 +669,831 @@ Data resolve_sentence(Sentence sentence, Map map){
         }
         map_put(map, right_data->value,data_create(MAP, map_create(data_makeCopy(right_data->value), MEMORY_CAPACITY)));
         return NULL;
-    case PLUS1:
-        left_sentence = sentence_getLeftSubsentece(sentence);
+	case PLUS1:
 
-        if(left_sentence){
-            left_data = resolve_sentence(left_sentence, map);
-            if(left_data->type == ERROR)
-                return left_data;
-            if(left_data->type != INT || left_data->type != FLOAT){
-                data_destroy(left_data);
-                printf("RUNTIME ERROR: invalid operation\n");
-                return data_create(ERROR, NULL);
-            }
-            answer = data_copyResolvedData(left_data);
-            if(left_data->type == INT)
-                (*((int*)left_data->value))++;
-            else
-                (*((float*)left_data->value))++;
-            map_put(map,sentence_getValue(left_sentence),left_data);
-            return answer;
-        }
-        else{
-            right_sentence = sentence_getRightSubsentece(sentence);
-            right_data = resolve_sentence(right_sentence,map);
-            if(right_data->type == ERROR)
-                return right_data;
-            if(right_data->type != INT || right_data->type != FLOAT){
-                data_destroy(right_data);
-                printf("RUNTIME ERROR: invalid operation\n");
-                return data_create(ERROR, NULL);
-            }
-            if(right_data->type == INT)
-                (*((int*)right_data->value))++;
-            else
-                (*((float*)right_data->value))++;
-            map_put(map,sentence_getValue(right_sentence),right_data);
-            return data_copyResolvedData(right_data);
-        }
-            
-    case MINUS1:
-            
-            break;
-            
-    case NEGATION:
-            
-            break;
-            
-    case MULTIPLICATION:
-            
-            break;
-            
-    case DIVISION:
-            
-            break;
-            
-    case MODULO:
-            
-            break;
-            
-    case SUM:
-            
-            break;
-            
-    case SUBSTRACT:
-            
-            break;
-            
-    case GREATER:
-            
-            break;
-            
-    case GREATER_EQUAL:
-            
-            break;
-            
-    case SMALLER_EQUAL:
-            
-            break;
-            
-    case SMALLER:
-            
-            break;
-            
-    case EQUAL:
-            
-            break;
-            
-    case NOT_EQUAL:
-            
-            break;
-            
-    case BINARY_AND:
-            
-            break;
-            
-    case BINARY_XOR:
-            
-            break;
-            
-    case BINARY_OR:
-            
-            break;
-            
-    case LOGIC_AND:
-            
-            break;
-            
-    case LOGIC_OR:
-            
-            break;
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		if(left_sentence){
+			left_data = resolve_sentence(left_sentence, map);
+			if(left_data->type == ERROR)
+				return left_data;
+			if(left_data->type != INT && left_data->type != FLOAT){
+				data_destroy(left_data);
+				printf("RUNTIME ERROR: invalid operation\n");
+				return data_create(ERROR, NULL);
+			}
+			answer = data_copyResolvedData(left_data);
+			if(left_data->type == INT)
+				(*((int*)left_data->value))++;
+			else
+				(*((float*)left_data->value))++;
+			map_put(map,sentence_getValue(left_sentence),left_data);
+			return answer;
+		}
+		else{
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = resolve_sentence(right_sentence,map);
+			if(right_data->type == ERROR)
+				return right_data;
+			if(right_data->type != INT && right_data->type != FLOAT){
+				data_destroy(right_data);
+				printf("RUNTIME ERROR: invalid operation\n");
+				return data_create(ERROR, NULL);
+			}
+			if(right_data->type == INT)
+				(*((int*)right_data->value))++;
+			else
+				(*((float*)right_data->value))++;
+			map_put(map,sentence_getValue(right_sentence),right_data);
+			return data_copyResolvedData(right_data);
+		}
+			
+	case MINUS1:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+
+		if(left_sentence){
+			left_data = resolve_sentence(left_sentence, map);
+			if(left_data->type == ERROR)
+				return left_data;
+			if(left_data->type != INT && left_data->type != FLOAT){
+				data_destroy(left_data);
+				printf("RUNTIME ERROR: invalid operation\n");
+				return data_create(ERROR, NULL);
+			}
+			answer = data_copyResolvedData(left_data);
+			if(left_data->type == INT)
+				(*((int*)left_data->value))--;
+			else
+				(*((float*)left_data->value))--;
+			map_put(map,sentence_getValue(left_sentence),left_data);
+			return answer;
+		}
+		else{
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = resolve_sentence(right_sentence,map);
+			if(right_data->type == ERROR)
+				return right_data;
+			if(right_data->type != INT && right_data->type != FLOAT){
+				data_destroy(right_data);
+				printf("RUNTIME ERROR: invalid operation\n");
+				return data_create(ERROR, NULL);
+			}
+			if(right_data->type == INT)
+				(*((int*)right_data->value))--;
+			else
+				(*((float*)right_data->value))--;
+			map_put(map,sentence_getValue(right_sentence),right_data);
+			return data_copyResolvedData(right_data);
+		}
+			
+	case NEGATION:
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: no able to negate the sentence\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR)
+			return right_data;
+		if(right_data->type != INT || right_data->type != FLOAT){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: not acepted type to negate\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = data_copyResolvedData(right_data);
+		if(answer->type == INT)
+			(*((int*)(answer->value))) = !(*((int*)(answer->value)));
+		return answer;
+			
+	case MULTIPLICATION:
+			left_sentence = sentence_getLeftSubsentece(sentence);
+			left_data = resolve_sentence(left_sentence,map);
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = resolve_sentence(right_sentence,map);
+			if(!right_data){
+				data_destroy(left_data);
+				printf("RUNTIME ERROR: no right parameter in the multiplication\n");
+				return data_create(ERROR, NULL);
+			}
+			if(right_data->type == ERROR){
+				data_destroy(left_data);
+				return right_data;
+			}
+			if(!left_data){
+				data_destroy(right_data);
+				printf("RUNTIME ERROR: no left parameter in the multiplication\n");
+				return data_create(ERROR, NULL);
+			}
+			if(left_data->type == ERROR){
+				data_destroy(right_data);
+				return left_data;
+			}
+			if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+				data_destroy(right_data);
+				data_destroy(left_data);
+				printf("RUNTIME ERROR: not acepted type for a multiplication\n");
+				return data_create(ERROR, NULL);
+			}
+			if(left_data->type == FLOAT){
+				if(right_data->type == FLOAT)
+					answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))*(*((float *)right_data->value)) )));
+				else
+					answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))*(*((int *)right_data->value)) )));
+			}
+			else{
+				if(right_data->type == FLOAT)
+					answer = data_create(FLOAT, Runtime_createfloat(((*((int *)left_data->value))*(*((float *)right_data->value)) )));
+				else
+					answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))*(*((int *)right_data->value)) )));
+			}
+			data_destroy(left_data);
+			data_destroy(right_data);
+			return answer;
+			
+	case DIVISION:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the division\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the division\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a division\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))/(*((float *)right_data->value)) )));
+			else
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))/(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((int *)left_data->value))/(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))/(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case MODULO:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the module\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the module\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if(left_data->type != INT || right_data->type != INT){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: module operation only acept Int values\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))%(*((int *)right_data->value)) )));
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+	case SUM:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the summation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the summation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(STRING,Runtime_sumStrings(left_data->value,right_data->value));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type to negate\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))+(*((float *)right_data->value)) )));
+			else
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))+(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((int *)left_data->value))+(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))+(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case SUBSTRACT:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the substraction\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the substraction\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a substraction\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))-(*((float *)right_data->value)) )));
+			else
+				answer = data_create(FLOAT, Runtime_createfloat(((*((float *)left_data->value))-(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(FLOAT, Runtime_createfloat(((*((int *)left_data->value))-(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))-(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case GREATER:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the greater operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the greater operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value)>0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a greater operation \n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))>(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))>(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))>(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))>(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case GREATER_EQUAL:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the greater equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the greater equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value)>=0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a greater equal operation\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))>=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))>=(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))>=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))>=(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case SMALLER_EQUAL:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the smaller equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the smaller equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value)<=0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a smaller equal operation\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))<=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))<=(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))<=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))<=(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case SMALLER:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the smaller operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the smaller operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value)<0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a smaller operation\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))<(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))<(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))<(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))<(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case EQUAL:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value) == 0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for the equal\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))==(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))==(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))==(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))==(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case NOT_EQUAL:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the not equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the not equal operation\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			if(left_data->type == STRING && right_data->type == STRING){
+				answer = data_create(INT, Runtime_createInt(strcmp(left_data->value,right_data->value)!=0));
+				data_destroy(right_data);
+				data_destroy(left_data);
+				return answer;
+			}
+			else{
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a not equal operation\n");
+			return data_create(ERROR, NULL);
+			}
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))!=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))!=(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))!=(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))!=(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case BINARY_AND:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the binary AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the binary AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a binary AND\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))&(*((int *)right_data->value)) )));
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case BINARY_XOR:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the binary XOR\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the binary XOR\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a binary XOR\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))^(*((int *)right_data->value)) )));
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case BINARY_OR:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the binary OR\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the binary OR\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a binary OR\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))|(*((int *)right_data->value)) )));
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case LOGIC_AND:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))&&(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))&&(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))&&(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))&&(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
+			
+	case LOGIC_OR:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = resolve_sentence(left_sentence,map);
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: no right parameter in the logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			data_destroy(left_data);
+			return right_data;
+		}
+		if(!left_data){
+			data_destroy(right_data);
+			printf("RUNTIME ERROR: no left parameter in the logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == ERROR){
+			data_destroy(right_data);
+			return left_data;
+		}
+		if((left_data->type != INT && left_data->type != FLOAT) || (right_data->type != INT && right_data->type != FLOAT)){
+			data_destroy(right_data);
+			data_destroy(left_data);
+			printf("RUNTIME ERROR: not acepted type for a logic AND\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type == FLOAT){
+			if(right_data->type == FLOAT)
+				answer = data_create(INT,  Runtime_createInt(((*((float *)left_data->value))||(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((float *)left_data->value))||(*((int *)right_data->value)) )));
+		}
+		else{
+			if(right_data->type == FLOAT)
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))||(*((float *)right_data->value)) )));
+			else
+				answer = data_create(INT, Runtime_createInt(((*((int *)left_data->value))||(*((int *)right_data->value)) )));
+		}
+		data_destroy(left_data);
+		data_destroy(right_data);
+		return answer;
             
     case TERNARY_QM:
             left_sentence = sentence_getLeftSubsentece(sentence);
@@ -818,29 +1534,261 @@ Data resolve_sentence(Sentence sentence, Map map){
             
             return answer;
             
-    case ASIGN:
-            
-            break;
-            
-    case SUM_ASIGN:
-            
-            break;
-            
-    case SUBSTRACT_ASIGN:
-            
-            break;
-            
-    case MULTIPLICATION_ASIGN:
-            
-            break;
-            
-    case DIVISION_ASIGN:
-            
-            break;
-            
-    case MODULO_ASIGN:
-            
-            break;
+   	case ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		map_put(map,data_makeCopy(left_data),right_data);
+		return data_copyResolvedData(right_data);
+			
+	case SUM_ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = map_get(map,left_data);
+		if(!answer){
+			printf("RUNTIME ERROR: sum assignation with a not declared name\n");
+			return data_create(ERROR, NULL);
+		}
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		answer = data_copyResolvedData(answer);
+		if ((answer->type != INT && answer->type != FLOAT)|| (right_data->type != INT && right_data->type != FLOAT)) {
+			if (answer->type == STRING && right_data->type == STRING) {
+				map_put(map,left_data,data_create(STRING,Runtime_sumStrings(answer->value,right_data->value)));
+				data_destroy(answer);
+				data_destroy(right_data);
+				return data_copyResolvedData(map_get(map,left_data));
+			} else {
+				data_destroy(right_data);
+				data_destroy(answer);
+				printf("RUNTIME ERROR: not compatible types for a sum asignation\n");
+				return data_create(ERROR, NULL);
+			}
+		}
+		if (answer->type == FLOAT) {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))+ (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))+ (*((int *) right_data->value))))));
+		} else {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((int *) answer->value))+ (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data,data_create(INT,Runtime_createInt(((*((int *) answer->value))+ (*((int *) right_data->value))))));
+		}
+		data_destroy(answer);
+		data_destroy(right_data);
+		return data_copyResolvedData(map_get(map,left_data));
+			
+	case SUBSTRACT_ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = map_get(map,left_data);
+		if(!answer){
+			printf("RUNTIME ERROR: substraction assignation with a not declared name\n");
+			return data_create(ERROR, NULL);
+		}
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		answer = data_copyResolvedData(answer);
+		if ((answer->type != INT && answer->type != FLOAT)|| (right_data->type != INT && right_data->type != FLOAT)) {
+				data_destroy(right_data);
+				data_destroy(answer);
+				printf("RUNTIME ERROR: not compatible types for a rest asignation\n");
+				return data_create(ERROR, NULL);
+		}
+		if (answer->type == FLOAT) {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))- (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))- (*((int *) right_data->value))))));
+		} else {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((int *) answer->value))- (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data,data_create(INT,Runtime_createInt(((*((int *) answer->value))- (*((int *) right_data->value))))));
+		}
+		data_destroy(answer);
+		data_destroy(right_data);
+		return data_copyResolvedData(map_get(map,left_data));
+			
+	case MULTIPLICATION_ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = map_get(map,left_data);
+		if(!answer){
+			printf("RUNTIME ERROR: multiplication assignation with a not declared name\n");
+			return data_create(ERROR, NULL);
+		}
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		answer = data_copyResolvedData(answer);
+		if ((answer->type != INT && answer->type != FLOAT)|| (right_data->type != INT && right_data->type != FLOAT)) {
+				data_destroy(right_data);
+				data_destroy(answer);
+				printf("RUNTIME ERROR: not compatible types for a multiplication asignation\n");
+				return data_create(ERROR, NULL);
+		}
+		if (answer->type == FLOAT) {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))* (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))* (*((int *) right_data->value))))));
+		} else {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((int *) answer->value))* (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data,data_create(INT,Runtime_createInt(((*((int *) answer->value))* (*((int *) right_data->value))))));
+		}
+		data_destroy(answer);
+		data_destroy(right_data);
+		return data_copyResolvedData(map_get(map,left_data));
+			
+	case DIVISION_ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = map_get(map,left_data);
+		if(!answer){
+			printf("RUNTIME ERROR: division assignation with a not declared name\n");
+			return data_create(ERROR, NULL);
+		}
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		answer = data_copyResolvedData(answer);
+		if ((answer->type != INT && answer->type != FLOAT)|| (right_data->type != INT && right_data->type != FLOAT)) {
+				data_destroy(right_data);
+				data_destroy(answer);
+				printf("RUNTIME ERROR: not compatible types for a division asignation\n");
+				return data_create(ERROR, NULL);
+		}
+		if (answer->type == FLOAT) {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))/ (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((float *) answer->value))/ (*((int *) right_data->value))))));
+		} else {
+			if (right_data->type == FLOAT)
+				map_put(map,left_data, data_create(FLOAT,Runtime_createfloat(((*((int *) answer->value))/ (*((float *) right_data->value))))));
+			else
+				map_put(map,left_data,data_create(INT,Runtime_createInt(((*((int *) answer->value))/ (*((int *) right_data->value))))));
+		}
+		data_destroy(answer);
+		data_destroy(right_data);
+		return data_copyResolvedData(map_get(map,left_data));
+			
+	case MODULO_ASIGN:
+		left_sentence = sentence_getLeftSubsentece(sentence);
+		left_data = sentence_getValue(left_sentence);
+		if(!left_data){
+			printf("RUNTIME ERROR: assignation without variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		if(left_data->type != NAME){
+			printf("RUNTIME ERROR: assignation to a no variable name\n");
+			return data_create(ERROR, NULL);
+		}
+		answer = map_get(map,left_data);
+		if(!answer){
+			printf("RUNTIME ERROR: module assignation with a not declared name\n");
+			return data_create(ERROR, NULL);
+		}
+		right_sentence = sentence_getRightSubsentece(sentence);
+		right_data = resolve_sentence(right_sentence,map);
+		if(!right_data){
+			printf("RUNTIME ERROR: assignation with not variable\n");
+			return data_create(ERROR, NULL);
+		}
+		if(right_data->type == ERROR){
+			return right_data;
+		}
+		answer = data_copyResolvedData(answer);
+		if (answer->type != INT || right_data->type != INT ) {
+				data_destroy(right_data);
+				data_destroy(answer);
+				printf("RUNTIME ERROR: not compatible types for a module asignation\n");
+				return data_create(ERROR, NULL);
+		}
+		map_put(map,left_data,data_create(INT,Runtime_createInt(((*((int *) answer->value))% (*((int *) right_data->value))))));
+		data_destroy(answer);
+		data_destroy(right_data);
+		return data_copyResolvedData(map_get(map,left_data));
             
     case IF:
             left_sentence = sentence_getLeftSubsentece(sentence);
