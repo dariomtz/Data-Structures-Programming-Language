@@ -33,6 +33,113 @@ Type Runtime_createfloat(float num){
     *p_num = num;
     return (Type)p_num;
 }
+Data print_func(List arguments,Map memory){
+	Iterator aux = list_begin(arguments);
+	Data p;
+	while(aux){
+		p = resolve_sentence(list_data(aux)->value,memory);
+		if(p->type == ERROR)
+			return p;
+		data_print(p);
+		printf(" ");
+		data_destroy(p);
+		aux = list_next(aux);
+	}
+	return NULL;
+}
+
+Data input_func(){
+	char* string = (char*)malloc(100);
+	scanf("%[^\n]s",string);
+	char* trueString = (char*)malloc(strlen(string));
+	free(string);
+	Data s = data_create(STRING,trueString);
+	return s;
+}
+
+Data int_cast(Sentence sentence,Map memory){
+	Data r = resolve_sentence(sentence,memory);
+	if( r->type == INT){
+		return r;
+	}
+
+	int* i = (int*)malloc(sizeof(int));
+	if(r->type == STRING){
+		*i = atoi(r->value);
+	}
+	else if(r->type == FLOAT){
+		*i = (int)*(float*)r->value;
+	}
+	else{
+		free(i);
+		printf("RUNTIME ERROR: invalid casting for int\n");
+		return data_create(ERROR,NULL);
+	}
+	data_destroy(r);
+	Data dataAux = data_create(INT,i);
+	return dataAux;
+}
+Data float_cast(Sentence sentence,Map memory){
+	Data r = resolve_sentence(sentence,memory);
+	if(r->type == FLOAT){
+		return r;
+	}
+	float* i = (float*)malloc(sizeof(float));
+	if(r->type == INT)
+		*i = (float)*(int*)r->value;
+	else if(r->type == STRING){
+		*i = atof(r->value);
+	}
+	else{
+		free(i);
+		printf("RUNTIME ERROR: invaid casting for float\n");
+		return data_create(ERROR,NULL);
+	}
+	data_destroy(r);
+	Data dataAux = data_create(FLOAT,i);
+	return dataAux;
+}
+int int_len(int i){
+	int count;
+	while(i/=10){
+		count++;
+	}
+	return count;
+}
+int float_len(float i){
+	int count;
+	while((int)i!=i){
+		i *= 10;
+	}
+	int i2 = (int)i;
+	while(i2/=10){
+		count++;
+	}
+	return count;
+}
+Data string_cast(Sentence sentence,Map memory){
+	Data r = resolve_sentence(sentence,memory);
+	if(r->type == STRING){
+		return r;
+	}
+	char* i;
+	if(r->type == INT){
+		i = (char*)malloc(sizeof(char)*int_len(*(int*)r->value)+1);
+		itoa(*(int*)r->value,i,10);
+	}
+	else if(r->type == FLOAT){
+		i = (char*)malloc(sizeof(char)*float_len(*(float*)r->value)+1);
+		gcvt(*(float*)r->value,float_len(*(float*)r->value),i	);
+	}
+	else{
+		printf("RUNTIME ERROR: invalid casting for string\n");
+		return data_create(ERROR,NULL);
+
+	}
+	data_destroy(r);
+	Data dataAux = data_create(STRING,i);
+	return dataAux;
+}
 
 Data Runtime_evaluateMethod(Data container, Sentence sentence, Map memory){
 	tokenType token = container -> type;
