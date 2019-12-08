@@ -58,8 +58,7 @@ Data data_copyResolvedData(Data data){
         copy -> value = (char *) malloc(strlen(data -> value));
         strcpy(copy -> value, data -> value);
     }else{
-        free(copy);
-        copy = NULL;
+        return data_makeReference(data);
     }
     
     return copy;
@@ -100,6 +99,8 @@ void data_destroy(Data data){
             list_destroy(data -> value);
         else if (data -> type == FUNCTION)
             block_destroy(data -> value);
+        else if (data -> type == SENTENCE)
+            sentence_destroy(data -> value);
         
     }
     
