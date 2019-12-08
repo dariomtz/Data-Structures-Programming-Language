@@ -18,5 +18,6 @@ Lexer lexer_create(FILE * f);
 void lexer_destroy(Lexer lexer);
 int lexer_numberOfTokens(Lexer lexer);
 Token lexer_getToken(Lexer lexer, int pos);
+void lexer_print(Lexer lexer);
 
 #endif /* Lexer_h */
