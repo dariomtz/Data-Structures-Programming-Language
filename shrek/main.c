@@ -33,24 +33,22 @@ int main() {
    	char fileName[50];
     printf("Escribe el nombre de tu archivo: \n");
     scanf("%s",fileName);
-    printf("WTF");
-    system("pause");
+    
     if(!validate(fileName)){
     	printf("FILE ERROR: invalid file");
     	return 0;
     }
     FILE * f = fopen(fileName,"r");
-    printf("Se leyo");
-    system("pause");
+    
     Lexer newLex = lexer_create(f);
-    printf("LEXER");
+    
     Parser newParser = parser_create(newLex);
-    printf("PARSER");
+
     RunTime(newParser);
-    printf("RUNTIME");
+    
     parser_destroy(newParser);
     lexer_destroy(newLex);
-    system("pause");
+
     return 0;
 
 

@@ -633,8 +633,10 @@ Data resolve_sentence(Sentence sentence, Map map){
     	if(!strcmp(midle_data->value,"print")){
     		return print_func(sentence_getValue(right_sentence)->value,map);
     	} else if (!strcmp(midle_data->value, "input")) {
+			//Check argument list for input
     		return input_func();
 		} else if (!strcmp(midle_data->value, "int")) {
+			
 			List list = sentence_getValue(right_sentence)->value;
 			if( list_size(list) < 1){
 				printf("RUNTIME ERROR: too few arguments for a int cast\n");
@@ -645,7 +647,9 @@ Data resolve_sentence(Sentence sentence, Map map){
 				return data_create(ERROR, NULL);
 			}
 			return int_cast(list_get(list,0)->value,map);
+			
 		} else if (!strcmp(midle_data->value, "float")) {
+			
 			List list = sentence_getValue(right_sentence)->value;
 			if( list_size(list) < 1){
 				printf("RUNTIME ERROR: too few arguments for a float cast\n");
@@ -658,6 +662,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 			return float_cast(list_get(list,0)->value,map);
 
 		} else if (!strcmp(midle_data->value, "str")) {
+			
 			List list = sentence_getValue(right_sentence)->value;
 			if( list_size(list) < 1){
 				printf("RUNTIME ERROR: too few arguments for a string cast\n");

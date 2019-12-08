@@ -22,10 +22,20 @@ Block block_create(Lexer lexer, int leftBrace, int rightBrace, Data name){
     newBlock -> error.type = NO_ERROR;
     newBlock -> error.message = (char *) malloc(100);
     
-    int i = leftBrace, j, openedBraces = 0;
+    int i = leftBrace + 1, j, openedBraces = 0;
     
     //get to the first token that is not a end of line, ather the initial '{'
-    while ((void)i++,lexer_getToken(lexer, i) -> type == END_LINE){}
+    while (lexer_getToken(lexer, i) -> type == END_LINE){
+        i++;
+    }
+    
+    if (i >= rightBrace) {
+        newBlock -> error.type = EMPTY_FUNCTION;
+        strcpy(newBlock -> error.message, "This function is empty.\n");
+        data_print(name);
+        return newBlock;
+    }
+    
     j = i + 1;
     
     tokenType begining, current, next;
