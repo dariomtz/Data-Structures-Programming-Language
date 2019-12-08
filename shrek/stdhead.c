@@ -37,6 +37,19 @@ Data data_makeCopy(Data data){
     return copy;
 }
 
+Data data_makeReference(Data data){
+    if (!data) {
+        return NULL;
+    }
+    
+    Data reference = (Data) malloc(sizeof(struct strData));
+    reference -> dest = false;
+    reference -> value = data -> value;
+    reference -> type =  data -> type;
+    
+    return reference;
+}
+
 Data data_copyResolvedData(Data data){
     if (!data) {
         return NULL;
@@ -64,18 +77,7 @@ Data data_copyResolvedData(Data data){
     return copy;
 }
 
-Data data_makeReference(Data data){
-    if (!data) {
-        return NULL;
-    }
-    
-    Data reference = (Data) malloc(sizeof(struct strData));
-    reference -> dest = false;
-    reference -> value = data -> value;
-    reference -> type =  data -> type;
-    
-    return reference;
-}
+
 
 void data_destroy(Data data){
     if (!data) {
