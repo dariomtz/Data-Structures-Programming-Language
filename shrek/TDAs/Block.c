@@ -121,6 +121,10 @@ List block_getParams(Block block){
     return block ? block -> params : NULL;
 }
 
+Data block_name(Block block){
+    return block ?  block -> name : NULL;
+}
+
 void block_setParams(Block block, List params){
     if (!block) {
         return;

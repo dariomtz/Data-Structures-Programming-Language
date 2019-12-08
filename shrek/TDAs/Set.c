@@ -201,7 +201,7 @@ void set_remove(Set set, Data data){
 	node n = set->sets[a];
 	node p = NULL;
 	int r;
-	bool isLeftChild;
+	bool isLeftChild = false;
 	while (n) {
 		r = data_cmp(data, n->data);
 		if (r == 0) {

@@ -298,7 +298,7 @@ Lexer lexer_create(FILE * f){
 	int action;
 	char Char;
 	char * word;
-	long int i = 0;
+	int i = 0;
 	fpos_t pos;
 	fgetpos(f,&pos);
 	while (!feof(f)) {

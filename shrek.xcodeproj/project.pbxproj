@@ -56,7 +56,7 @@
 		48FBD0D02388AF5B00A542FF /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		48FBD0D12388AF5B00A542FF /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		48FBD0D32388AFDD00A542FF /* Runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Runtime.h; sourceTree = "<group>"; };
-		48FBD0D42388AFDD00A542FF /* Runtime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Runtime.c; sourceTree = "<group>"; };
+		48FBD0D42388AFDD00A542FF /* Runtime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Runtime.c; sourceTree = "<group>"; usesTabs = 1; };
 		48FBD0D6238B1AFA00A542FF /* Block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Block.h; sourceTree = "<group>"; };
 		48FBD0D7238B1AFA00A542FF /* Block.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Block.c; sourceTree = "<group>"; };
 		48FBD0D9238B1B9D00A542FF /* Sentence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sentence.h; sourceTree = "<group>"; };

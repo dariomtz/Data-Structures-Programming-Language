@@ -17,12 +17,25 @@
 #include "Stack.h"
 #include "Map.h"
 
+Data resolve_sentence(Sentence sentence, Map map);
 
 typedef enum{NO_VALID = -1, M_ADD, M_GET, M_SET, M_REMOVE, M_PRINT, M_SIZE, M_PUT, M_ISEMPTY,
 	M_OFFER, M_PEEK, M_POLL, M_TOP, M_POP, M_PUSH, M_CONTAINS}MethodType;
 
-Data Runtime_evaluateMethod(Data container, Sentence sentence){
-	Token token = container->type;
+Type Runtime_createInt(int num){
+    int * p_num = malloc(sizeof(int));
+    *p_num = num;
+    return (Type)p_num;
+}
+
+Type Runtime_createfloat(float num){
+    float * p_num = malloc(sizeof(float));
+    *p_num = num;
+    return (Type)p_num;
+}
+
+Data Runtime_evaluateMethod(Data container, Sentence sentence, Map memory){
+	tokenType token = container -> type;
 	List arguments = (sentence_getValue(sentence_getRightSubsentece(sentence)))->value;
 	char * name = (char *)(sentence_getValue(sentence))->value;
 	Data pos, data, answer;
@@ -58,7 +71,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				return data_create(ERROR, NULL);
 			}
 
-			pos = resolve_sentence(list_get(arguments, 0));
+			pos = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if(pos->type == ERROR)
 				return pos;
 			if(pos->type != INT){
@@ -81,7 +94,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				return data_create(ERROR, NULL);
 			}
 
-			pos = resolve_sentence(list_get(arguments, 0));
+			pos = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (pos->type == ERROR)
 				return pos;
 			if (pos->type != INT) {
@@ -90,7 +103,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				return data_create(ERROR, NULL);
 			}
 
-			data = resolve_sentence(list_get(arguments, 1));
+			data = resolve_sentence(list_get(arguments, 1) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 
@@ -110,7 +123,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				return data_create(ERROR, NULL);
 			}
 
-			data = resolve_sentence(list_get(arguments, 1));
+			data = resolve_sentence(list_get(arguments, 1) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 
@@ -129,7 +142,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				return data_create(ERROR, NULL);
 			}
 
-			pos = resolve_sentence(list_get(arguments, 0));
+			pos = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if(pos->type == ERROR)
 				return pos;
 			if(pos->type != INT){
@@ -171,7 +184,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a remove method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			map_remove((Map)container->value, data);
@@ -188,12 +201,12 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a remove method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			answer = map_get((Map)container->value, data);
 			data_destroy(data);
-			answer = data_copyResolvedData;
+			answer = data_copyResolvedData(answer);
 			return answer;
 		}
 		//PUT o el que lo lea
@@ -206,11 +219,11 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a put method\n");
 				return data_create(ERROR, NULL);
 			}
-			pos = resolve_sentence(list_get(arguments, 0));
-			if (data->type == ERROR)
+			pos = resolve_sentence(list_get(arguments, 0) -> value, memory);
+			if (pos->type == ERROR)
 				return pos;
 
-			data = resolve_sentence(list_get(arguments, 1));
+			data = resolve_sentence(list_get(arguments, 1) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			map_put((Map)container->value,pos,data);
@@ -258,7 +271,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a offer method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			queue_offer(((Queue)container->value),data);
@@ -316,7 +329,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a remove method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			set_remove((Set)container->value, data);
@@ -334,7 +347,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a add method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			return data_create(INT,Runtime_createInt(set_add((Set)container->value, data)));
@@ -350,7 +363,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a contains method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 
@@ -417,39 +430,32 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence){
 				printf("RUNTIME ERROR: too many arguments for a push method\n");
 				return data_create(ERROR, NULL);
 			}
-			data = resolve_sentence(list_get(arguments, 0));
+			data = resolve_sentence(list_get(arguments, 0) -> value, memory);
 			if (data->type == ERROR)
 				return data;
 			stack_push((Stack) container->value,data);
 			return NULL;
 		}
 		break;
+    default:
+			break;
 	}
 	printf("RUNTIME ERROR: '%s' is not a valid method\n",name);
 	return data_create(ERROR, NULL);
 }
 
-Type Runtime_createInt(int num){
-	int * p_num = malloc(sizeof(int));
-	*p_num = num;
-	return (Type)p_num;
- }
-
-Type Runtime_createfloat(float num){
-	float * p_num = malloc(sizeof(float));
-	*p_num = num;
-	return (Type)p_num;
- }
-
 Data resolve_data(Data data) {
 	switch(data->type)
 	{
 		case INT:
-		return data_create(INT, Runtime_createInt(atoi(data->value)));
+			return data_create(INT, Runtime_createInt(atoi(data->value)));
 		case FLOAT:
-		return data_create(FLOAT, Runtime_createfloat(atof(data->value)));
+			return data_create(FLOAT, Runtime_createfloat(atof(data->value)));
 		case STRING:
-		return data_makeCopy(data);
+			return data_makeCopy(data);
+		default:
+			return data_create(ERROR, NULL);
+			
 	}
 }
 
@@ -481,14 +487,14 @@ Data resolve_sentence(Sentence sentence, Map map){
 		left_data = resolve_sentence(left_sentence, map);
 		if(left_data->type == ERROR)
 			return left_data;
-		if(left_data->type < LIST || left_data>MAP){
+		if(left_data->type < LIST || left_data -> type > MAP){
 			data_destroy(left_data);
 			left_data = sentence_getValue(left_sentence);
 			printf("RUNTIME ERROR: the %s is not a abstract data type ",left_data->value);
 			return data_create(ERROR, NULL);
 		}
 		right_sentence = sentence_getRightSubsentece(sentence);
-		answer = Runtime_evaluateMethod(left_data,right_sentence);
+		answer = Runtime_evaluateMethod(left_data,right_sentence, map);
 		data_destroy(left_data);
 		return answer;
 	case LIST:
@@ -497,7 +503,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 		if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
 			return data_create(ERROR, NULL);
 		}
-		map_put(map, right_data->value,data_create(LIST, list_create(data_copy(right_data->value))));
+		map_put(map, right_data->value,data_create(LIST, list_create(data_makeCopy(right_data->value))));
 		return NULL;
 	case STACK:
 		right_sentence = sentence_getRightSubsentece(sentence);
@@ -505,7 +511,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 		if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
 			return data_create(ERROR, NULL);
 		}
-		map_put(map, right_data->value,data_create(STACK, stack_create(data_copy(right_data->value))));
+		map_put(map, right_data->value,data_create(STACK, stack_create(data_makeCopy(right_data->value))));
 		return NULL;
 	case QUEUE:
 		right_sentence = sentence_getRightSubsentece(sentence);
@@ -513,7 +519,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 		if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
 			return data_create(ERROR, NULL);
 		}
-		map_put(map, right_data->value,data_create(QUEUE, queue_create(data_copy(right_data->value))));
+		map_put(map, right_data->value,data_create(QUEUE, queue_create(data_copyResolvedData(right_data->value))));
 		return NULL;
 	case SET:
 		right_sentence = sentence_getRightSubsentece(sentence);
@@ -521,7 +527,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 		if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
 			return data_create(ERROR, NULL);
 		}
-		map_put(map, right_data->value,data_create(SET, set_create(data_copy(right_data->value))));
+		map_put(map, right_data->value,data_create(SET, set_create(data_makeCopy(right_data->value))));
 		return NULL;
 	case MAP:
 		right_sentence = sentence_getRightSubsentece(sentence);
@@ -530,7 +536,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 			printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
 			return data_create(ERROR, NULL);
 		}
-		map_put(map, right_data->value,data_create(MAP, map_create(data_copy(right_data->value))));
+		map_put(map, right_data->value,data_create(MAP, map_create(data_makeCopy(right_data->value), MEMORY_CAPACITY)));
 		return NULL;
 	case PLUS1:
 		left_sentence = sentence_getLeftSubsentece(sentence);
@@ -553,7 +559,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 			return answer;
 		}
 		else{
-			right_sentence = sentence_getRightSubsentence(sentence);
+			right_sentence = sentence_getRightSubsentece(sentence);
 			right_data = resolve_sentence(right_sentence,map);
 			if(right_data->type == ERROR)
 				return right_data;
@@ -562,16 +568,17 @@ Data resolve_sentence(Sentence sentence, Map map){
 				printf("RUNTIME ERROR: invalid operation\n");
 				return data_create(ERROR, NULL);
 			}
-			if(left_data->type == INT)
-				(*((int*)left_data->value))++;
+			if(right_data->type == INT)
+				(*((int*)right_data->value))++;
 			else
-				(*((float*)left_data->value))++;
-			map_put(map,sentence_getValue(left_sentence),left_data);
-			return data_copyResolvedData(left_data);
+				(*((float*)right_data->value))++;
+			map_put(map,sentence_getValue(right_sentence),right_data);
+			return data_copyResolvedData(right_data);
 		}
-
+    default:
+        return NULL;
 	}
-};
+}
 
 void RunTime(Parser parser){
 	error error = parser_getErrorStatus(parser);

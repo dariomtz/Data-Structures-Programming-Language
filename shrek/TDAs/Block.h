@@ -15,6 +15,7 @@
 typedef struct strBlock * Block;
 
 Block block_create(Lexer lexer, int leftBrace, int rightBrace, Data name);
+Data block_name(Block block);
 void block_print(Block block);
 void block_destroy(Block block);
 int block_size(Block block);
