@@ -649,8 +649,43 @@ Data resolve_sentence(Sentence sentence, Map map){
 			break;
 			
 	case TERNARY_QM:
+			left_sentence = sentence_getLeftSubsentece(sentence);
+			left_data = resolve_sentence(left_sentence, map);
 			
-			break;
+			if (!left_data){
+				printf("RUNTIME ERROR: Conditional sentece must return something for ternary operand.\n");
+				return data_create(ERROR, NULL);
+			}
+			
+			if(left_data -> type != INT && left_data -> type != FLOAT) {
+				printf("RUNTIME ERROR: Conditional sentece must return a boolean value for ternary operand.\n");
+				data_destroy(left_data);
+				return data_create(ERROR, NULL);
+			}
+			
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = sentence_getValue(right_sentence);
+			if (!right_data) {
+				printf("RUNTIME ERROR: Ternary operand must specify a result using ':'.\n");
+				data_destroy(left_data);
+				return data_create(ERROR, NULL);
+			}
+			
+			if (right_data -> type != TERNARY_DOTS) {
+				printf("RUNTIME ERROR: Ternary operand must specify a result using ':'.\n");
+				data_destroy(left_data);
+				return data_create(ERROR, NULL);
+			}
+			
+			if ((left_data -> type == INT && *(int*)left_data -> value) || (left_data -> type == FLOAT && *(float*)left_data -> value)) {
+				answer = resolve_sentence(sentence_getLeftSubsentece(right_sentence), map);
+			}else{
+				answer = resolve_sentence(sentence_getRightSubsentece(right_sentence), map);
+			}
+			
+			data_destroy(left_data);
+			
+			return answer;
 			
 	case ASIGN:
 			
