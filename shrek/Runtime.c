@@ -48,6 +48,28 @@ Data print_func(List arguments,Map memory){
 	return NULL;
 }
 
+Type Runtime_sumStrings(char * left_word, char * right_word){
+	int i = 0;
+	int j = 0;
+	while(left_word[i] != '\0')
+		i++;
+	while(right_word[j] != '\0')
+		j++;
+	char * new_word = (char *)malloc((i+j+1)*sizeof(char));
+	i = 0;
+	j = 0;
+	while(left_word[i] != '\0'){
+		new_word[i] = left_word[i];
+		i++;
+	}
+	while(right_word[j] != '\0'){
+		new_word[i+j] = right_word[j];
+		j++;
+	}
+	new_word[i+j+1]='\0';
+	return new_word;
+}
+
 Data input_func(){
 	char* string = (char*)malloc(100);
 	scanf("%[^\n]s",string);
