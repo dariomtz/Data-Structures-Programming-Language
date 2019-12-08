@@ -100,14 +100,14 @@ Data float_cast(Sentence sentence,Map memory){
 	return dataAux;
 }
 int int_len(int i){
-	int count;
+	int count = 0;
 	while(i/=10){
 		count++;
 	}
 	return count;
 }
 int float_len(float i){
-	int count;
+	int count = 0;
 	while((int)i!=i){
 		i *= 10;
 	}
@@ -117,6 +117,7 @@ int float_len(float i){
 	}
 	return count;
 }
+
 Data string_cast(Sentence sentence,Map memory){
 	Data r = resolve_sentence(sentence,memory);
 	if(r->type == STRING){
@@ -125,7 +126,7 @@ Data string_cast(Sentence sentence,Map memory){
 	char* i;
 	if(r->type == INT){
 		i = (char*)malloc(sizeof(char)*int_len(*(int*)r->value)+1);
-		itoa(*(int*)r->value,i,10);
+		snprintf(i, sizeof(char)*int_len(*(int*)r->value)+1, "%d", *(int*)r->value);
 	}
 	else if(r->type == FLOAT){
 		i = (char*)malloc(sizeof(char)*float_len(*(float*)r->value)+1);
