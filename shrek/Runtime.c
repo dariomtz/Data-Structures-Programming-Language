@@ -459,6 +459,30 @@ Data resolve_data(Data data) {
 	}
 }
 
+Data resolve_block(Map memory, Block b){
+	if (!b) {
+		return NULL;
+	}
+	int bl_size = block_size(b);
+	Sentence sentence;
+	Data result_data;
+	for(int i = 0; i<bl_size; i++){
+		sentence = block_getSentence(b,i);
+		result_data = resolve_sentence(sentence, memory);
+		if (result_data) {
+			if (result_data -> type == BREAK || result_data -> type == ERROR) {
+				return result_data;
+			}else if(result_data -> type == CONTINUE){
+				data_destroy(result_data);
+				return NULL;
+			}else{
+				data_destroy(result_data);
+			}
+		}
+	}
+	return NULL;
+}
+
 Data resolve_sentence(Sentence sentence, Map map){
 	Data midle_data, left_data, right_data;
 	Sentence left_sentence, right_sentence;
@@ -712,12 +736,68 @@ Data resolve_sentence(Sentence sentence, Map map){
 			break;
 			
 	case IF:
+			left_sentence = sentence_getLeftSubsentece(sentence);
+			left_data = resolve_sentence(left_sentence, map);
 			
-			break;
+			if (!left_data){
+				printf("RUNTIME ERROR: There must be a conditional sentece for IF statement.\n");
+				return data_create(ERROR, NULL);
+			}
+			
+			if(left_data -> type != INT && left_data -> type != FLOAT) {
+				printf("RUNTIME ERROR: Conditional sentece must return a boolean value for IF statement.\n");
+				data_destroy(left_data);
+				return data_create(ERROR, NULL);
+			}
+			
+			right_sentence = sentence_getRightSubsentece(sentence);
+			
+			if ((left_data -> type == INT && *(int*)left_data -> value) || (left_data -> type == FLOAT && *(float*)left_data -> value)) {
+				
+				answer = resolve_block(map, sentence_getValue(sentence_getLeftSubsentece(right_sentence)) -> value);
+			}else{
+				answer = resolve_block(map, sentence_getValue(sentence_getRightSubsentece(right_sentence)) -> value);
+			}
+			data_destroy(left_data);
+			
+			return answer;
 			
 	case WHILE:
+			left_sentence = sentence_getLeftSubsentece(sentence);
+			left_data = resolve_sentence(left_sentence, map);
 			
-			break;
+			if (!left_data){
+				printf("RUNTIME ERROR: There must be a conditional sentece for WHILE statement.\n");
+				return data_create(ERROR, NULL);
+			}
+			
+			if(left_data -> type != INT && left_data -> type != FLOAT) {
+				printf("RUNTIME ERROR: Conditional sentece must return a boolean value for WHILW statement.\n");
+				data_destroy(left_data);
+				return data_create(ERROR, NULL);
+			}
+			
+			right_sentence = sentence_getRightSubsentece(sentence);
+			right_data = sentence_getValue(right_sentence);
+			
+			while ((left_data -> type == INT && *(int*)left_data -> value) || (left_data -> type == FLOAT && *(float*)left_data -> value)) {
+				answer = resolve_block(map, right_data -> value);
+				if (answer) {
+					if (answer -> type == BREAK) {
+						data_destroy(left_data);
+						data_destroy(answer);
+						return NULL;
+					}else if(answer -> type == ERROR){
+						data_destroy(left_data);
+						return answer;
+					}
+				}
+				data_destroy(left_data);
+				left_data = resolve_sentence(left_sentence, map);
+			}
+			data_destroy(left_data);
+			
+			return NULL;
 			
 	case FOR:
 			
@@ -754,20 +834,24 @@ void RunTime(Parser parser){
 	Data main_data =(Data)malloc(sizeof(struct strData));
 	main_data->type = NAME;
 	
+	main_data -> value = (char *) calloc(5, sizeof(char));
 	//Here, the name of the main can change in the future
 	strcpy(main_data->value, "main");
 	//-------------------------------------------------------------------------------------//
-	main_data = map_get(map_functions, main_data);
-	Block block = (Block)main_data->type;
+	Data main_func = map_get(map_functions, main_data);
+	free(main_data);
+	Block block = (Block) main_func -> value;
 	int bl_size = block_size(block);
 	Sentence sentence;
 	Data result_data;
 	for(int i = 0; i<bl_size; i++){
 		sentence = block_getSentence(block,i);
 		result_data = resolve_sentence(sentence, map_functions);
-		if(result_data->type == ERROR){
-			data_destroy(result_data);
-			return;
+		if (result_data) {
+			if(result_data->type == ERROR){
+				data_destroy(result_data);
+				return;
+			}
 		}
 	}
 };
