@@ -804,11 +804,11 @@ Data resolve_sentence(Sentence sentence, Map map){
 			break;
 			
 	case BREAK:
-			
+			return data_create(BREAK, NULL);
 			break;
 			
 	case CONTINUE:
-			
+			return data_create(CONTINUE, NULL);
 			break;
 			
 	
