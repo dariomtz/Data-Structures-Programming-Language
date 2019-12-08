@@ -47,7 +47,7 @@ bool stack_isEmpty(Stack stack){
 	return stack && stack->size != 0 ? true : false;
 }
 
-int size(Stack stack){
+int stack_size(Stack stack){
 	return stack ? stack->size : 0;
 }
 

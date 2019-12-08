@@ -16,7 +16,7 @@ void stack_print(Stack stack);
 Data stack_name(Stack stack);
 void stack_destroy(Stack stack);
 bool stack_isEmpty(Stack stack);
-int size(Stack stack);
+int stack_size(Stack stack);
 Data stack_top(Stack stack);
 Data stack_pop(Stack stack);
 void stack_push(Stack stack,Data data);
