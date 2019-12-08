@@ -18,6 +18,21 @@ struct strLexer{
 	Token * list;
 };
 
+void lexer_print(Lexer lexer){
+	if(!lexer)
+		return;
+	int size = lexer_numberOfTokens(lexer);
+	Token token;
+	for(int i = 0; i<size; i++){
+		token = lexer_getToken(lexer, i);
+		printf("\t<Type: %d,\t",token->type);
+		if(((char*)(token->value))[0] == '\n')
+			printf("Value: \\n>\n");
+		else
+		printf("Value: %s>\n",(char*)(token->value));
+	}
+};
+
 char * string_modification(char * c, int size){
 	int removes = 0;
 	for(int i = 0; i<size; i++){
@@ -167,8 +182,6 @@ tokenType searchType(char* word, int size){
 			return WHILE;
 		if (!(strcmp(word, "break")))
 			return BREAK;
-		if (!(strcmp(word, "print")))
-			return FUNCTION;
 		if (!(strcmp(word, "stack")))
 			return STACK;
 		if (!(strcmp(word, "queue")))
