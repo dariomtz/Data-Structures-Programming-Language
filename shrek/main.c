@@ -31,14 +31,15 @@ int validate(char* fileName){
 }
 int main() {
    	char fileName[50];
-    strcpy(fileName, "hola.shrek");
-//    printf("Write the name of your file: \n");
-//    scanf("%s",fileName);
-//
-//    if(!validate(fileName)){
-//        printf("FILE ERROR: invalid type of file.\n");
-//        return 0;
-//    }
+    //strcpy(fileName, "hola.shrek");
+    
+    printf("Write the name of your file: \n");
+    scanf("%s",fileName);
+
+    if(!validate(fileName)){
+        printf("FILE ERROR: invalid type of file.\n");
+        return 0;
+    }
     FILE * f = fopen(fileName,"r");
     
     Lexer newLex = lexer_create(f);
