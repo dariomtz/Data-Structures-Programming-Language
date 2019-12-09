@@ -604,11 +604,9 @@ Data resolve_block(Map memory, Block b){
         sentence = block_getSentence(b,i);
         result_data = resolve_sentence(sentence, memory);
         if (result_data) {
-            if (result_data -> type == BREAK || result_data -> type == ERROR) {
+            if (result_data -> type == BREAK || result_data -> type == ERROR || result_data -> type == CONTINUE) {
                 return result_data;
-            }else if(result_data -> type == CONTINUE){
-                data_destroy(result_data);
-                return NULL;
+
             }else{
                 data_destroy(result_data);
             }
@@ -621,6 +619,9 @@ Data resolve_sentence(Sentence sentence, Map map){
     Data midle_data, left_data, right_data;
     Sentence left_sentence, right_sentence;
     midle_data = sentence_getValue(sentence);
+	if (!midle_data) {
+		return NULL;
+	}
     Data answer;
     switch(midle_data->type){
     case FALSE:
@@ -1922,8 +1923,8 @@ Data resolve_sentence(Sentence sentence, Map map){
                         data_destroy(left_data);
                         data_destroy(answer);
                         return NULL;
-						
-                    }else if(answer -> type == ERROR){
+					
+					}else if(answer -> type == ERROR){
                         data_destroy(left_data);
                         return answer;
 						
@@ -1967,54 +1968,51 @@ Data resolve_sentence(Sentence sentence, Map map){
 				return data_create(ERROR, NULL);
 			}
 			
-			Data increment = list_get(forInstructions, 2);
+			Sentence increment = list_get(forInstructions, 2) -> value;
+			
+			if (!increment) {
+				printf("RUNTIME ERROR: Invalid types increment for FOR statement.\n");
+				return NULL;
+			}
 			
 			right_sentence = sentence_getRightSubsentece(sentence);
 			right_data = sentence_getValue(right_sentence);
+			Data incrementResult;
 			
 			while ((conditionResolved -> type == INT && *(int*)conditionResolved -> value) || (conditionResolved -> type == FLOAT && *(float*)conditionResolved -> value)) {
 				
 				answer = resolve_block(map, right_data -> value);
 				if (answer) {
 					if (answer -> type == BREAK) {
-						if (increment -> type != SENTENCE) {
-							data_destroy(increment);
-						}
+						
 						data_destroy(conditionResolved);
 						data_destroy(answer);
 						return NULL;
 						
 					}else if(answer -> type == ERROR){
-						if (increment -> type != SENTENCE) {
-							data_destroy(increment);
-						}
 						data_destroy(conditionResolved);
 						return answer;
 					}else{
 						data_destroy(answer);
 					}
+					
 				}
 				
-				if (increment -> type != SENTENCE) {
-					data_destroy(increment);
-				}
-				
-				increment = resolve_sentence(increment -> value, map);
-				if (increment) {
-					if (increment -> type == ERROR) {
-						data_destroy(conditionResolved);
-						return increment;
+				incrementResult = resolve_sentence(increment, map);
+				if (incrementResult) {
+					if (incrementResult -> type == ERROR) {
+						return incrementResult;
 					}
 				}
+				
+				data_destroy(incrementResult);
 				
 				data_destroy(conditionResolved);
 				conditionResolved = resolve_sentence(condition -> value, map);
 			}
 			
 			data_destroy(conditionResolved);
-			if (increment -> type != SENTENCE) {
-				data_destroy(increment);
-			}
+			
 			
 			return NULL;
             

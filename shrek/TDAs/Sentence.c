@@ -121,7 +121,7 @@ Data createForList(Lexer lexer, int sc1, int sc2, int leftParen, int rightParen)
 
     //increment or decrement
     
-    Sentence increment = sentence_create(lexer, sc2 + 1, LPAREN - 1);
+    Sentence increment = sentence_create(lexer, sc2 + 1, rightParen - 1);
     if (increment) {
         error e = increment -> error;
         if (e.type){
@@ -132,7 +132,7 @@ Data createForList(Lexer lexer, int sc1, int sc2, int leftParen, int rightParen)
     }
     
     list_add(list, data_create(SENTENCE, increment));
-    
+
     return data_create(LIST, list);
 }
 
