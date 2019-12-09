@@ -42,7 +42,7 @@ int main() {
     FILE * f = fopen(fileName,"r");
     
     Lexer newLex = lexer_create(f);
-    //lexer_print(newLex);
+    lexer_print(newLex);
     
     fclose(f);
     

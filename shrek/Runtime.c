@@ -1898,7 +1898,8 @@ Data resolve_sentence(Sentence sentence, Map map){
             
     case WHILE:
             left_sentence = sentence_getLeftSubsentece(sentence);
-            left_data = resolve_sentence(left_sentence, map);
+			
+            left_data = resolve_sentence(sentence_getValue(left_sentence) -> value, map);
             
             if (!left_data){
                 printf("RUNTIME ERROR: There must be a conditional sentece for WHILE statement.\n");
@@ -1931,7 +1932,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 					}
                 }
                 data_destroy(left_data);
-                left_data = resolve_sentence(left_sentence, map);
+				left_data = resolve_sentence(sentence_getValue(left_sentence) -> value, map);
             }
             data_destroy(left_data);
             

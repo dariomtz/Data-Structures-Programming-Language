@@ -220,6 +220,17 @@ Sentence sentence_create(Lexer lexer, int a, int b){
     Sentence newSentece = (Sentence) malloc(sizeof(struct strSentence));
     newSentece -> error.message = (char *) malloc(100);
     newSentece -> error.type = NO_ERROR;
+    
+    //Ignore the last character if it is a end of line character
+    if (lexer_getToken(lexer, b) -> type == END_LINE) {
+        b--;
+    }
+    
+    //If both of the borders are parenthesis, they should be ignored
+    if (lexer_getToken(lexer, a) -> type == LPAREN && lexer_getToken(lexer, b) -> type == RPAREN) {
+        a++;
+        b--;
+    }
 
     //non-recursive cases
     
@@ -231,18 +242,10 @@ Sentence sentence_create(Lexer lexer, int a, int b){
     }
     
     if (a > b) {
+        free(newSentece -> error.message);
+        free(newSentece);
+        
         return NULL;
-    }
-    
-    //Ignore the last character if it is a end of line character
-    if (lexer_getToken(lexer, b) -> type == END_LINE) {
-        b--;
-    }
-    
-    //If both of the borders are parenthesis, they should be ignored
-    if (lexer_getToken(lexer, a) -> type == LPAREN && lexer_getToken(lexer, b) -> type == RPAREN) {
-        a++;
-        b--;
     }
     
     Token first = lexer_getToken(lexer, a);
@@ -262,13 +265,18 @@ Sentence sentence_create(Lexer lexer, int a, int b){
         
         rs -> value = data_create(ELSE, NULL);
         
+        
+        rs -> leftSubsentence = (Sentence) malloc(sizeof(struct strSentence));
         rs -> leftSubsentence -> leftSubsentence = NULL;
         rs -> leftSubsentence -> rightSubsentence = NULL;
         rs -> leftSubsentence -> value = data_create(FUNCTION, block_create(lexer, c.lbrace, c.rbrace, NULL));
         
+        rs -> rightSubsentence = (Sentence) malloc(sizeof(struct strSentence));
         rs -> rightSubsentence -> leftSubsentence = NULL;
         rs -> rightSubsentence -> rightSubsentence = NULL;
         rs -> rightSubsentence -> value = data_create(FUNCTION, block_create(lexer, c.elseLbrace, c.elseRbrace, NULL));
+        
+        return newSentece;
         
     }else if (typeFirst == FOR){
         //do all the validations to make an for statement and return errors
@@ -327,9 +335,11 @@ Sentence sentence_create(Lexer lexer, int a, int b){
         
         newSentece -> leftSubsentence = (Sentence) malloc(sizeof(struct strSentence));
         
-        newSentece -> leftSubsentence -> value = createArgumentList(lexer, c.lparen, c.rparen);
+        newSentece -> leftSubsentence -> value = data_create(SENTENCE, sentence_create(lexer, c.lparen, c.rparen));
         newSentece -> leftSubsentence -> leftSubsentence = NULL;
         newSentece -> leftSubsentence -> rightSubsentence = NULL;
+        
+        newSentece -> rightSubsentence = (Sentence) malloc(sizeof(struct strSentence));
         
         newSentece -> rightSubsentence -> value = data_create(FUNCTION, block_create(lexer, c.lbrace, c.rbrace, NULL));
         newSentece -> rightSubsentence -> leftSubsentence = NULL;
