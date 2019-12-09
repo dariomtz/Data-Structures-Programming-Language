@@ -752,6 +752,10 @@ Data resolve_sentence(Sentence sentence, Map map){
 
 		left_sentence = sentence_getLeftSubsentece(sentence);
 		if(left_sentence){
+			if(sentence_getValue(left_sentence)->type != NAME){
+				printf("RUNTIME ERROR: increment is only accepted with variables\n");
+				return data_create(ERROR, NULL);
+			}
 			left_data = resolve_sentence(left_sentence, map);
 			if(left_data->type == ERROR)
 				return left_data;
@@ -770,6 +774,10 @@ Data resolve_sentence(Sentence sentence, Map map){
 		}
 		else{
 			right_sentence = sentence_getRightSubsentece(sentence);
+			if(sentence_getValue(right_sentence)->type != NAME){
+				printf("RUNTIME ERROR: increment is only accepted with variables\n");
+				return data_create(ERROR, NULL);
+			}
 			right_data = resolve_sentence(right_sentence,map);
 			if(right_data->type == ERROR)
 				return right_data;
@@ -790,6 +798,10 @@ Data resolve_sentence(Sentence sentence, Map map){
 		left_sentence = sentence_getLeftSubsentece(sentence);
 
 		if(left_sentence){
+			if (sentence_getValue(left_sentence)->type != NAME) {
+				printf("RUNTIME ERROR: decrement is only accepted with variables\n");
+				return data_create(ERROR, NULL);
+			}
 			left_data = resolve_sentence(left_sentence, map);
 			if(left_data->type == ERROR)
 				return left_data;
@@ -808,6 +820,10 @@ Data resolve_sentence(Sentence sentence, Map map){
 		}
 		else{
 			right_sentence = sentence_getRightSubsentece(sentence);
+			if (sentence_getValue(right_sentence)->type != NAME) {
+				printf("RUNTIME ERROR: decrement is only accepted with variables\n");
+				return data_create(ERROR, NULL);
+			}
 			right_data = resolve_sentence(right_sentence,map);
 			if(right_data->type == ERROR)
 				return right_data;
@@ -823,7 +839,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 			map_put(map,sentence_getValue(right_sentence),right_data);
 			return data_copyResolvedData(right_data);
 		}
-			
+		    
 	case NEGATION:
 		right_sentence = sentence_getRightSubsentece(sentence);
 		right_data = resolve_sentence(right_sentence,map);
