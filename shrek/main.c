@@ -31,7 +31,7 @@ int validate(char* fileName){
 }
 int main() {
    	char fileName[50];
-    strcpy(fileName, "hola.shrek")
+    strcpy(fileName, "hola.shrek");
 //    printf("Write the name of your file: \n");
 //    scanf("%s",fileName);
 //
