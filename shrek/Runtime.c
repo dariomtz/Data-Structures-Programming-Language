@@ -570,6 +570,8 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence, Map memory){
         }
         break;
     default:
+        printf("RUNTIME ERROR: '%s' is not a valid method\n",name);
+        return data_create(ERROR, NULL);
             break;
     }
     printf("RUNTIME ERROR: '%s' is not a valid method\n",name);
