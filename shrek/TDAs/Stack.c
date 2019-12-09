@@ -44,7 +44,7 @@ Data stack_name(Stack stack){
 }
 
 bool stack_isEmpty(Stack stack){
-	return stack && stack->size != 0 ? true : false;
+	return stack && stack->size == 0 ? true : false;
 }
 
 int stack_size(Stack stack){
