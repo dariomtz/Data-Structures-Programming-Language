@@ -72,7 +72,7 @@ Type Runtime_sumStrings(char * left_word, char * right_word){
 
 Data input_func(){
 	char* string = (char*)malloc(100);
-	scanf("%[^\n]s",string);
+	scanf(" %[^\n]s",string);
 	char* trueString = (char*)malloc(strlen(string));
 	strcpy(trueString, string);
 	free(string);
