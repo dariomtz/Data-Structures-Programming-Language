@@ -71,7 +71,7 @@ int evaluate_Action(char Char){
 		return USELESS;
 	if (caracter(Char)||Char == '.')
 		return CARACTER;
-	if (Char == '\n' || Char == 13 || Char == '(' ||  Char == ')' || Char == '{' || Char == '}' || Char == '?' || Char == ':' || Char == ',' || Char == ';')
+	if (Char == '\n' || Char == 13 || Char == '!' || Char == '(' ||  Char == ')' || Char == '{' || Char == '}' || Char == '?' || Char == ':' || Char == ',' || Char == ';')
 		return UNITARY;
 	return OPERATIONAL;
 
@@ -127,8 +127,10 @@ tokenType searchType(char* word, int size){
 			return RBRACE;
 		if (word[0] == '?')
             return TERNARY_QM;
-        if (word[0] == ':')
+        	if (word[0] == ':')
             return TERNARY_DOTS;
+		if (word[0] == '!')
+            return NEGATION;
 		break;
 	case 2:
 		if (!(strcmp(word, "if")))
