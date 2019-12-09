@@ -152,7 +152,7 @@ Data listMap_remove(ListMap l, Data k) {
 
 //Externals Functions
 Map map_create(Data name, int cap){
-	if (!name || !cap )
+	if (!cap )
 		return NULL;
 	Map map = (Map) malloc(sizeof(struct strMap));
 	map->cap = cap;
@@ -214,7 +214,9 @@ void map_put(Map map, Data key, Data v){
 Data map_get(Map map, Data key){
 	if(!map||!key)
 		return NULL;
+    
 	int i = hash(key, map->cap);
+    
 	ListMap l = map->table[i];
 	if (!l)
 		return NULL;

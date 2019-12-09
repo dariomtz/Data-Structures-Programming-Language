@@ -219,17 +219,19 @@ codeBlock getCodeBlock(Lexer lexer, int a, int b){
 Sentence sentence_create(Lexer lexer, int a, int b){
     Sentence newSentece = (Sentence) malloc(sizeof(struct strSentence));
     newSentece -> error.message = (char *) malloc(100);
+    newSentece -> error.type = NO_ERROR;
 
     //non-recursive cases
-    if (a > b) {
-        return NULL;
-    }
     
     if (a == b) {
         newSentece -> value = data_makeCopy(lexer_getToken(lexer, a));
         newSentece -> rightSubsentence = NULL;
         newSentece -> leftSubsentence = NULL;
         return newSentece;
+    }
+    
+    if (a > b) {
+        return NULL;
     }
     
     //Ignore the last character if it is a end of line character
@@ -429,8 +431,11 @@ void sentence_destroy(Sentence sentence){
         return;
     }
     
-    data_destroy(sentence -> value);
-    free(sentence -> error.message);
+    data_sentenceDataDestroy(sentence -> value);
+    if (!sentence -> error.message) {
+        free(sentence -> error.message);
+        sentence -> error.message = NULL;
+    }
     
     sentence_destroy(sentence -> leftSubsentence);
     sentence_destroy(sentence -> rightSubsentence);

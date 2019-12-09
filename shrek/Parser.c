@@ -74,6 +74,9 @@ Parser parser_create(Lexer lexer){
     
     while (true) {
         current= lexer_getToken(lexer, ++j);
+        if(!current){
+            break;
+        }
         if (current -> type == END_LINE) {
             continue;
         }else if (current -> type == FUNCTION){

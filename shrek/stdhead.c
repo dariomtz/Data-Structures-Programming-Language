@@ -109,6 +109,18 @@ void data_destroy(Data data){
     free(data);
 }
 
+void data_sentenceDataDestroy(Data data){
+    if (!data) {
+        return;
+    }
+    if (data->value) {
+        free(data -> value);
+        data -> value = NULL;
+    }
+    
+    free(data);
+}
+
 int data_cmp(Data a, Data b){
     if((a -> type == FLOAT || a -> type == INT) && (b -> type == FLOAT || b -> type == INT)){
         int x, y;
@@ -151,7 +163,7 @@ void data_print(Data data){
     }
     
     if (data -> type == INT || data -> type == FLOAT || data -> type == STRING) {
-        printD(data->value);
+        printD(data);
     }
     
     else if (data -> type == MAP)

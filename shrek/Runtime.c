@@ -257,7 +257,7 @@ Data Runtime_evaluateMethod(Data container, Sentence sentence, Map memory){
                 return data_create(ERROR, NULL);
             }
 
-            data = resolve_sentence(list_get(arguments, 1) -> value, memory);
+            data = resolve_sentence(list_get(arguments, 0) -> value, memory);
             if (data->type == ERROR)
                 return data;
 
@@ -677,7 +677,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 
         answer =  map_get(map,midle_data);
         if(!answer){
-            printf("RUNTIME ERROR: the %s name is not defined",midle_data->value);
+            printf("RUNTIME ERROR: the '%s' name is not defined.\n",midle_data->value);
             return data_create(ERROR, NULL);
         }
         if(answer->type == FUNCTION){
@@ -699,7 +699,7 @@ Data resolve_sentence(Sentence sentence, Map map){
         if(left_data->type < LIST || left_data -> type > MAP){
             data_destroy(left_data);
             left_data = sentence_getValue(left_sentence);
-            printf("RUNTIME ERROR: the %s is not a abstract data type ",left_data->value);
+            printf("RUNTIME ERROR: the %s is not a abstract data type.\n",left_data->value);
             return data_create(ERROR, NULL);
         }
         right_sentence = sentence_getRightSubsentece(sentence);
@@ -709,10 +709,11 @@ Data resolve_sentence(Sentence sentence, Map map){
     case LIST:
         right_sentence = sentence_getRightSubsentece(sentence);
         right_data = sentence_getValue(right_sentence);
-        if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
+        if (map_get(map, right_data)) {
+			printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
             return data_create(ERROR, NULL);
         }
-        map_put(map, right_data->value,data_create(LIST, list_create(data_makeCopy(right_data->value))));
+        map_put(map, data_makeCopy(right_data),data_create(LIST, list_create(data_makeCopy(right_data))));
         return NULL;
     case STACK:
         right_sentence = sentence_getRightSubsentece(sentence);
@@ -720,7 +721,7 @@ Data resolve_sentence(Sentence sentence, Map map){
         if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
             return data_create(ERROR, NULL);
         }
-        map_put(map, right_data->value,data_create(STACK, stack_create(data_makeCopy(right_data->value))));
+        map_put(map, data_makeCopy(right_data),data_create(STACK, stack_create(data_makeCopy(right_data))));
         return NULL;
     case QUEUE:
         right_sentence = sentence_getRightSubsentece(sentence);
@@ -728,7 +729,7 @@ Data resolve_sentence(Sentence sentence, Map map){
         if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
             return data_create(ERROR, NULL);
         }
-        map_put(map, right_data->value,data_create(QUEUE, queue_create(data_copyResolvedData(right_data->value))));
+        map_put(map, data_makeCopy(right_data),data_create(QUEUE, queue_create(data_makeCopy(right_data))));
         return NULL;
     case SET:
         right_sentence = sentence_getRightSubsentece(sentence);
@@ -736,7 +737,7 @@ Data resolve_sentence(Sentence sentence, Map map){
         if (map_get(map, right_data)) {printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
             return data_create(ERROR, NULL);
         }
-        map_put(map, right_data->value,data_create(SET, set_create(data_makeCopy(right_data->value))));
+        map_put(map, data_makeCopy(right_data),data_create(SET, set_create(data_makeCopy(right_data))));
         return NULL;
     case MAP:
         right_sentence = sentence_getRightSubsentece(sentence);
@@ -745,7 +746,7 @@ Data resolve_sentence(Sentence sentence, Map map){
             printf("RUNTIME ERROR: double declaration of '%s'\n",right_data->value);
             return data_create(ERROR, NULL);
         }
-        map_put(map, right_data->value,data_create(MAP, map_create(data_makeCopy(right_data->value), MEMORY_CAPACITY)));
+        map_put(map, data_makeCopy(right_data),data_create(MAP, map_create(data_makeCopy(right_data), MEMORY_CAPACITY)));
         return NULL;
 	case PLUS1:
 
@@ -2044,12 +2045,16 @@ void RunTime(Parser parser){
     Map map_functions = parser_getMemoryMap(parser);
     Data main_data =(Data)malloc(sizeof(struct strData));
     main_data->type = NAME;
-    
     main_data -> value = (char *) calloc(5, sizeof(char));
+	
     //Here, the name of the main can change in the future
     strcpy(main_data->value, "main");
     //-------------------------------------------------------------------------------------//
     Data main_func = map_get(map_functions, main_data);
+	if (!main_func) {
+		printf("RUNTIME ERROR: No function named 'main'.\n");
+		return;
+	}
     free(main_data);
     Block block = (Block) main_func -> value;
     int bl_size = block_size(block);
@@ -2065,4 +2070,5 @@ void RunTime(Parser parser){
             }
         }
     }
+	printf("\n");
 };

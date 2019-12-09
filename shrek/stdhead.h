@@ -63,6 +63,7 @@ struct strData {
 Data data_create(tokenType type, Type value);
 Data data_makeCopy(Data data);
 Data data_copyResolvedData(Data data);
+void data_sentenceDataDestroy(Data data);
 int data_cmp(Data a, Data b);
 void data_print(Data data);
 void data_destroy(Data data);

@@ -31,23 +31,27 @@ int validate(char* fileName){
 }
 int main() {
    	char fileName[50];
-    printf("Escribe el nombre de tu archivo: \n");
+    printf("Write the name of your file: \n");
     scanf("%s",fileName);
     
     if(!validate(fileName)){
-    	printf("FILE ERROR: invalid file");
+    	printf("FILE ERROR: invalid type of file.\n");
     	return 0;
     }
     FILE * f = fopen(fileName,"r");
     
     Lexer newLex = lexer_create(f);
+    //lexer_print(newLex);
+    
+    fclose(f);
     
     Parser newParser = parser_create(newLex);
 
     RunTime(newParser);
     
-    parser_destroy(newParser);
     lexer_destroy(newLex);
+    parser_destroy(newParser);
+    
 
     return 0;
 

@@ -35,14 +35,14 @@ void list_print(List list){
 	if(!list)
 		return;
     Node auxNode = list -> first;
-	printf("(");
+	printf(" (");
 	while(auxNode){
 		data_print(auxNode->data);
 		if(auxNode->next)
 			printf(",");
 		auxNode = auxNode->next;
 	}
-	printf(")");
+	printf(" )");
 }
 
 Data list_name(List list){
@@ -80,6 +80,8 @@ void list_add(List list, Data data){
     if (list -> last) {
         list -> last -> next = newNode;
         list -> last = newNode;
+    }else{
+        list -> last = newNode;
     }
     
     if (!list -> first) {
@@ -91,7 +93,7 @@ void list_add(List list, Data data){
 }
 
 Data list_get(List list, int pos){
-    if(!list || !(0 <= pos || pos < list -> size))
+    if(!list || !(0 <= pos && pos < list -> size))
 		return NULL;
     
 	Node aux = list->first;
@@ -104,7 +106,7 @@ Data list_get(List list, int pos){
 }
 
 void list_set(List list, int pos, Data data){
-	if(!list || !(0 <= pos || pos < list -> size))
+	if(!list || !(0 <= pos && pos < list -> size))
 		return;
     
     Node aux = list->first;
@@ -120,7 +122,7 @@ void list_set(List list, int pos, Data data){
 }
 
 void list_remove(List list, int pos){
-    if(!list || !(0 <= pos || pos < list -> size)){
+    if(!list || !(0 <= pos && pos < list -> size)){
 		return;
 	}
     

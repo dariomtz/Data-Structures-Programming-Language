@@ -26,10 +26,11 @@ void lexer_print(Lexer lexer){
 	for(int i = 0; i<size; i++){
 		token = lexer_getToken(lexer, i);
 		printf("\t<Type: %d,\t",token->type);
-		if(((char*)(token->value))[0] == '\n')
+		if(((char*)(token->value))[0] == '\n' || ((char*)(token->value))[0] == 13)
 			printf("Value: \\n>\n");
-		else
-		printf("Value: %s>\n",(char*)(token->value));
+        else{
+		printf("Value: '%s'>\n",(char*)(token->value));
+        }
 	}
 };
 
@@ -70,7 +71,7 @@ int evaluate_Action(char Char){
 		return USELESS;
 	if (caracter(Char)||Char == '.')
 		return CARACTER;
-	if (Char == '\n'|| Char == '(' ||  Char == ')' || Char == '{' || Char == '}' || Char == '?' || Char == ':' || Char == ',' || Char == ';')
+	if (Char == '\n' || Char == 13 || Char == '(' ||  Char == ')' || Char == '{' || Char == '}' || Char == '?' || Char == ':' || Char == ',' || Char == ';')
 		return UNITARY;
 	return OPERATIONAL;
 
@@ -112,7 +113,7 @@ tokenType searchType(char* word, int size){
 			return LPAREN;
 		if (word[0] == ')')
 			return RPAREN;
-		if(word[0] == '\n')
+		if(word[0] == '\n' || word[0] == 13)
 			return END_LINE;
 		if (word[0] == ',')
 			return COMMA;
