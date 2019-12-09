@@ -56,7 +56,7 @@ Data stack_top(Stack stack){
 }
 
 Data stack_pop(Stack stack){
-	if(!stack || !stack->name){
+	if(!stack || !stack->top){
 		return NULL;
 	}
 	Data auxData = stack->top->data;

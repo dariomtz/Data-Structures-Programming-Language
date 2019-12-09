@@ -632,7 +632,7 @@ Data resolve_sentence(Sentence sentence, Map map){
     	if(!strcmp(midle_data->value,"print")){
     		return print_func(sentence_getValue(right_sentence)->value,map);
     	} else if (!strcmp(midle_data->value, "input")) {
-			//Check argument list for input
+			
     		return input_func();
 		} else if (!strcmp(midle_data->value, "int")) {
 			
@@ -673,15 +673,54 @@ Data resolve_sentence(Sentence sentence, Map map){
 			}
 			return string_cast(list_get(list,0)->value,map);
 		}
+		
 
         answer =  map_get(map,midle_data);
         if(!answer){
             printf("RUNTIME ERROR: the '%s' name is not defined.\n",(char*)midle_data->value);
             return data_create(ERROR, NULL);
         }
+		
         if(answer->type == FUNCTION){
-        	
-
+			Block function = answer -> value;
+			List arguments = sentence_getValue(right_sentence) -> value;
+			
+			if (list_size(arguments) != list_size(block_getParams(function))) {
+				printf("RUNTIME ERROR: Incorrect number of arguments in function '%s'.\n",(char*)midle_data->value);
+				return data_create(ERROR, NULL);
+			}
+			
+			Iterator i = list_begin(block_getParams(function));
+			Iterator j = list_begin(arguments);
+			
+			while (list_exists(i)) {
+				Data argumentResolved = resolve_sentence(list_data(j) -> value, map);
+				if (argumentResolved) {
+					if (argumentResolved -> type == ERROR) {
+						return argumentResolved;
+					}
+				}
+				map_put(map, data_makeCopy(list_data(i)), argumentResolved);
+				
+				i = list_next(i);
+				j = list_next(j);
+			}
+			
+			Data result = resolve_block(map, function);
+			
+			i = list_begin(block_getParams(function));
+			
+			while (list_exists(i)) {
+				map_remove(map, list_data(i));
+				i = list_next(i);
+			}
+			
+			if(result){
+				if (result -> type == ERROR) {
+					return result;
+				}
+			}
+			return NULL;
         }
         return data_copyResolvedData(answer);
     case INT:
