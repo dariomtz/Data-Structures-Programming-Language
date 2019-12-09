@@ -849,7 +849,7 @@ Data resolve_sentence(Sentence sentence, Map map){
 		}
 		if(right_data->type == ERROR)
 			return right_data;
-		if(right_data->type != INT || right_data->type != FLOAT){
+		if(right_data->type != INT && right_data->type != FLOAT){
 			data_destroy(right_data);
 			printf("RUNTIME ERROR: not acepted type to negate\n");
 			return data_create(ERROR, NULL);
