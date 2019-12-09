@@ -152,7 +152,7 @@ Data string_cast(Sentence sentence,Map memory){
 	char* i;
 	if(r->type == INT){
 		i = (char*)malloc(sizeof(char)*int_len(*(int*)r->value)+1);
-		snprintf(i, sizeof(char)*int_len(*(int*)r->value)+1, "%d", *(int*)r->value);
+		gcvt(*(int*)r->value,float_len(*(int*)r->value)+1,i	);
 	}
 	else if(r->type == FLOAT){
 		i = (char*)malloc(sizeof(char)*float_len(*(float*)r->value)+1);
