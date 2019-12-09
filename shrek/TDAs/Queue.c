@@ -52,7 +52,7 @@ int queue_size(Queue queue){
 }
 
 bool queue_isEmpty(Queue queue){
-	return queue && queue->size != 0 ? true : false;
+	return queue && queue->size != 0 ? false : true;
 }
 
 void queue_offer(Queue queue, Data data){
