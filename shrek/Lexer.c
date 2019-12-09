@@ -197,6 +197,30 @@ tokenType searchType(char* word, int size){
 		if (!(strcmp(word, "FUNCTION")))
 			return FUNCTION;
 		break;
+	case 9:
+		if (!(strcmp(word, "deberitas")))
+			return IF;
+		if (!(strcmp(word, "ya_merito")))
+					return FOR;
+		break;
+	case 18:
+		if (!(strcmp(word, "shrek_para_siempre")))
+					return WHILE;
+				break;
+	case 19:
+		if (!(strcmp(word, "deberitas_deveritas")))
+			return ELSE;
+		break;
+	case 26:
+		if (!(strcmp(word, "uso_ropa_interior_de_mujer")))
+			return TRUE;
+		break;
+	case 29:
+		if (!(strcmp(word, "no_uso_ropa_interior_de_mujer")))
+			return FALSE;
+		break;
+
+
 	}
 
 	//If it is here, means that it can be a number o a name
