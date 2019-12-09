@@ -741,6 +741,11 @@ Data resolve_sentence(Sentence sentence, Map map){
             return data_create(ERROR, NULL);
         }
         right_sentence = sentence_getRightSubsentece(sentence);
+        if(!right_sentence){
+        	data_destroy(left_data);
+        	printf("RUNTIME ERROR: no method after the method indication");
+        	return data_create(ERROR, NULL);
+        }
         answer = Runtime_evaluateMethod(left_data,right_sentence, map);
         data_destroy(left_data);
         return answer;
