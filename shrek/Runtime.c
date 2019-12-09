@@ -3,8 +3,6 @@
 //  Runtime.c
 //  shrek
 //
-//  Created by DarÃƒÆ’Ã‚Â­o MartÃƒÆ’Ã‚Â­nez on 11/22/19.
-//  Copyright Ãƒâ€šÃ‚Â© 2019 DarÃƒÆ’Ã‚Â­o MartÃƒÆ’Ã‚Â­nez. All rights reserved.
 //
 
 #include "Runtime.h"
