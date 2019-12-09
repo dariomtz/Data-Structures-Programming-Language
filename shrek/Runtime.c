@@ -156,7 +156,7 @@ Data string_cast(Sentence sentence,Map memory){
 	}
 	else if(r->type == FLOAT){
 		i = (char*)malloc(sizeof(char)*float_len(*(float*)r->value)+1);
-		gcvt(*(float*)r->value,float_len(*(float*)r->value),i	);
+		gcvt(*(float*)r->value,float_len(*(float*)r->value)+1,i	);
 	}
 	else{
 		printf("RUNTIME ERROR: invalid casting for string\n");
