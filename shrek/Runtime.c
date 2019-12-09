@@ -631,7 +631,7 @@ Data resolve_sentence(Sentence sentence, Map map){
     	right_sentence = sentence_getRightSubsentece(sentence);
     	if(!strcmp(midle_data->value,"print")){
     		return print_func(sentence_getValue(right_sentence)->value,map);
-    	} else if (!strcmp(midle_data->value, "input")) {
+    	} else if (!strcmp(midle_data->value, "input")||!strcmp(midle_data->value,"grunieme")) {
 			
     		return input_func();
 		} else if (!strcmp(midle_data->value, "int")) {
