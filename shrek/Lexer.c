@@ -165,9 +165,9 @@ tokenType searchType(char* word, int size){
 	case 3:
 		if (!(strcmp(word, "for")))
 			return FOR;
-		if (!(strcmp(word, "set")))
+		if (!(strcmp(word, "SET")))
 			return SET;
-		if (!(strcmp(word, "map")))
+		if (!(strcmp(word, "MAP")))
 			return MAP;
 		break;
 	case 4:
@@ -175,7 +175,7 @@ tokenType searchType(char* word, int size){
 			return TRUE;
 		if (!(strcmp(word, "else")))
 			return ELSE;
-		if (!(strcmp(word, "list")))
+		if (!(strcmp(word, "LIST")))
 			return LIST;
 		break;
 	case 5:
@@ -185,9 +185,9 @@ tokenType searchType(char* word, int size){
 			return WHILE;
 		if (!(strcmp(word, "break")))
 			return BREAK;
-		if (!(strcmp(word, "stack")))
+		if (!(strcmp(word, "STACK")))
 			return STACK;
-		if (!(strcmp(word, "queue")))
+		if (!(strcmp(word, "QUEUE")))
 			return QUEUE;
 		break;
 	case 8:
