@@ -110,9 +110,9 @@ Operator  | Operation
 
 Operator  | Operation
 --------- | ---------
->         | bigger than
+\>        | bigger than
 <         | smaller than
->=        | bigger or equal than
+\>=       | bigger or equal than
 <=        | smaller or equal than
 ==        | equals
 !=        | not equals
