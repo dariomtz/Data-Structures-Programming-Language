@@ -11,6 +11,14 @@ Every sentence in your program should be wrapped inside a function. There needs 
 ### How to use it?
 
 #### Functions
+A function is a block of code that can be excecuted multiple times. The content of the function are bounded by curly braces, just as in the following example. A block of code is set of ordered sentences. The end of the sentence is marked by the line break character '\n'.
+
+```
+FUNCTION main(){
+  print('Hello World!)
+}
+```
+There two native functions to the language, that are help with standard input and output. They are called *input* and *print* respectively. 
 
 #### Variables
 Variables are declared and initialized at the same time, just like in python:
@@ -42,35 +50,142 @@ There is another type of data that can be stored. However, these are rather stru
 
 Data Structure | Example of declaration  | Methods         | Example                  | Explanation
 -------------- | ----------------------- | --------------- | -------------------      | ------------------------------------
-Stack          | ```STACK name```        | ```print()```   | ```name.print()```       | Prints the stack in between brackets
+Stack          | ```STACK name```        | ```print()```   | ```name.print()```       | Prints the stack in between square brackets
 .              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the stack
 .              | .                       | ```isEmpty()``` | ```name.isEmpty()```     | Returns a boolean that represents whether the stack is empty or not
 .              | .                       | ```push(data)```| ```name.push(data)```    | Places the data received on top of the stack
 .              | .                       | ```top()```     | ```name.top()```         | Returns the value that is on top of the stack
 .              | .                       | ```pop()```     | ```name.pop()```         | Returns the value that is on top of the stack, as well as removing it from the stack
-
+Queue          | ```QUEUE name```        | ```print()```   | ```name.print()```       | Prints the queue in between square brackets
+.              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the queue
+.              | .                       | ```isEmpty()``` | ```name.isEmpty()```     | Returns a boolean that represents whether the queue is empty or not
+.              | .                       | ```offer(data)```  | ```name.offer(data)```| Places the data received on the back of the queue
+.              | .                       | ```peek()```    | ```name.peek()```        | Returns the value that is on the front of the queue
+.              | .                       | ```poll()```    | ```name.poll()```        | Returns the value that is on the front of the queue, as well as removing it from the queue
+List           | ```LIST name```         | ```print()```   | ```name.print()```       | Prints the list in between parenthesis
+.              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the list
+.              | .                       | ```remove(int)```   | ```name.remove(int)```   | Removes the ith element of the list
+.              | .                       | ```set(int,data)``` | ```name.set(int, data)```| Places the data received on in the ith position of the list. The position must be a valid position between 0 and size inclusive.
+.              | .                       | ```add(data)``` | ```name.add(data)```     | Adds the data received after the last element of the list
+.              | .                       | ```get(int)```  | ```name.pop(int)```      | Returns the value that is on the ith position of the list
+Set            | ```SET name```          | ```print()```   | ```name.print()```       | Prints the set in between curly brackets
+.              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the set
+.              | .                       | ```remove(data)```  | ```name.remove(data)```  | Deletes the data given, if it is inside the set already.
+.              | .                       | ```add(data)``` | ```name.add(data)```     | Adds the data given to the set, if it isn't inside the set yet.
+.              | .                       | ```contains(data)```| ```name.contains(data)```| Returns a boolean representing if the data given is already inside or not 
+Map            | ```MAP name```          | ```print()```   | ```name.print()```       | Prints the map in between square brackets
+.              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the map
+.              | .                       | ```put(key, value)```| ```name.put(key, value)```   | Saves the given value under the given key
+.              | .                       | ```get(key)```  | ```name.get(key)```      | Gets the value saved under the given key
+.              | .                       | ```remove(key)```     | ```name.top(key)```         | Deletes the given key and the value saved under it
 
 
 #### Operations
+The DS Programming Language supports all the following operations. It also supports parentesis ```()``` to specify priority.
 
 ##### Assignation
 
+Operator  | Operation
+--------- | ---------
+=         | assign
++=        | sum and assign
+-=        | subtract and assign
+\*=       | multiply and assign
+/=        | divide and assign
+%=        | modulo and assign
+++        | add 1 and assign
+--        | subtract 1 and assign
+
 ##### Arithmetic
+
+Operator  | Operation
+--------- | ---------
++         | sum
+-         | subtract
+\*        | multiply
+/         | divide
+%         | modulo
 
 ##### Logical
 
+Operator  | Operation
+--------- | ---------
+>         | bigger than
+<         | smaller than
+>=        | bigger or equal than
+<=        | smaller or equal than
+==        | equals
+!=        | not equals
+&&	      | logical and
+||	      | logical or
+
 ##### Bitwise
+
+Operator  | Operation
+--------- | ---------
+&	        | bitwise and
+^	        | bitwise xor
+|	        | bitwise or
 
 #### Control flow statements
 
-##### IF
+There is a ternary operator, to help you make decisions on the fly. For example:
+```
+  print((age >= 18) ? 'You are an adult' : 'You are underage')
+```
 
-##### ELSE
+##### Conditionals
 
-##### FOR
+###### IF
+Condicionals have the following structure.
+
+```
+  if(condition){
+      
+  }
+```
+
+The condition can either be a boolean or a number, where zero represents false. The sentences inside the curly braces will be executed if and only if the condition evaluates to TRUE.
+
+###### ELSE
+Else statements are used to specify what must be done in case that the condition evaluates to FALSE.
+```
+  if(condition){
+      
+  }else{
+  
+  }
+```
+
+##### LOOPS
+
+###### FOR
+For loops have the following structure.
+```
+  for(initialization; condition; addition){
+  
+  }
+``` 
+
+Initialization is a sentence where an index can be initialized. Condition is the condition that must be met for the loop to continue, and addition is where the index can be modified before the next iteration.
+
+An example of a for loop that prints the even numbers between 0 and 9 would be as the following.
+```
+  for(i = 0; i < 10; i+=2){
+    print(i)
+  }
+```
 
 ##### WHILE
 
+A while loop has the following structure.
+
+```
+  while(condition){
+  
+  }
+```
+This loops continues to execute the code in between curly braces as long as the condition evaluates to TRUE
 
 
 
