@@ -43,11 +43,11 @@ There is another type of data that can be stored. However, these are rather stru
 Data Structure | Example of declaration  | Methods         | Example                  | Explanation
 -------------- | ----------------------- | --------------- | -------------------      | ------------------------------------
 Stack          | ```STACK name```        | ```print()```   | ```name.print()```       | Prints the stack in between brackets
-.              |          .              | ```size()```    | ```name.size()```        | Returns an integer representing the size of the stack
-               |                         | ```isEmpty()``` | ```name.isEmpty()```     | Returns a boolean that represents whether the stack is empty or not
-               |                         | ```push(data)```| ```name.push(data)```    | Places the data received on top of the stack
-               |                         | ```top()```     | ```name.top()```         | Returns the value that is on top of the stack
-               |                         | ```pop()```     | ```name.pop()```         | Returns the value that is on top of the stack, as well as removing it from the stack
+.              | .                       | ```size()```    | ```name.size()```        | Returns an integer representing the size of the stack
+.              | .                       | ```isEmpty()``` | ```name.isEmpty()```     | Returns a boolean that represents whether the stack is empty or not
+.              | .                       | ```push(data)```| ```name.push(data)```    | Places the data received on top of the stack
+.              | .                       | ```top()```     | ```name.top()```         | Returns the value that is on top of the stack
+.              | .                       | ```pop()```     | ```name.pop()```         | Returns the value that is on top of the stack, as well as removing it from the stack
 
 
 
