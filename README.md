@@ -100,8 +100,8 @@ Operator  | Operation
 
 Operator  | Operation
 --------- | ---------
-+         | sum
--         | subtract
+\+        | sum
+\-        | subtract
 \*        | multiply
 /         | divide
 %         | modulo
@@ -117,7 +117,7 @@ Operator  | Operation
 ==        | equals
 !=        | not equals
 &&	      | logical and
-||	      | logical or
+\|\|	    | logical or
 
 ##### Bitwise
 
@@ -125,7 +125,7 @@ Operator  | Operation
 --------- | ---------
 &	        | bitwise and
 ^	        | bitwise xor
-|	        | bitwise or
+\|	        | bitwise or
 
 #### Control flow statements
 
@@ -176,7 +176,7 @@ An example of a for loop that prints the even numbers between 0 and 9 would be a
   }
 ```
 
-##### WHILE
+###### WHILE
 
 A while loop has the following structure.
 
