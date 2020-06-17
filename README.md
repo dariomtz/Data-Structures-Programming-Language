@@ -41,9 +41,9 @@ This will allow you to use the function ```foo``` under the name ```foo_referenc
 There is another type of data that can be stored. However, these are rather structures than just raw data. These data structures allow you to organize information in different ways, explained in the following table:
 
 Data Structure | Example of declaration  | Methods         | Example                  | Explanation
--------------- | ----------------------- | --------------- | -------------------      | -----------
+-------------- | ----------------------- | --------------- | -------------------      | ------------------------------------
 Stack          | ```STACK name```        | ```print()```   | ```name.print()```       | Prints the stack in between brackets
-               |                         | ```size()```    | ```name.size()```        | Returns an integer representing the size of the stack
+.              |          .              | ```size()```    | ```name.size()```        | Returns an integer representing the size of the stack
                |                         | ```isEmpty()``` | ```name.isEmpty()```     | Returns a boolean that represents whether the stack is empty or not
                |                         | ```push(data)```| ```name.push(data)```    | Places the data received on top of the stack
                |                         | ```top()```     | ```name.top()```         | Returns the value that is on top of the stack
