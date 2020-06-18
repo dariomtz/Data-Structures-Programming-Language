@@ -1,7 +1,7 @@
 # Data Structures (DS) Programming Language 
-This is a programming language that has simple data structures implemented from scratch. The main focus of this project is for new programmers to learn how some basic data structures work in the simplest way.
+This is a programming language that has some simple data structures built-in, with an easy to pick up syntax for new programmers. Therefore, it makes it easy for new programmers to learn how some basic data structures work.
 
-It was initialy called Shrek Programming language because there are some parts of the language that can be used with dialogs of the Shrek movies in spanish.
+It was initialy called Shrek Programming language because there are some parts of the language that can be used with dialogs of the Shrek movies in spanish. That is why some of the files have a shrek relate theme.
 
 ## How it works?
 Once the executable program for main.c is built, run it and indicate the name of the file where your program is.
